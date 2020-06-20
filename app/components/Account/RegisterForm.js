@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Input, Icon, Button } from "react-native-elements";
-
 import { validateEmail } from "../../utils/validations";
 import { size, isEmpty } from "lodash";
 import * as firebase from "firebase"
@@ -130,7 +129,7 @@ const styles = StyleSheet.create({
     width: "95%",
   },
   btnRegister: {
-    backgroundColor: "#00a680",
+    backgroundColor: "#615DE7",
   },
   iconRight: {
     color: "#c1c1c1",

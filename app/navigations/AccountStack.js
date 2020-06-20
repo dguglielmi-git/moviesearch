@@ -20,7 +20,7 @@ export default function AccountStack() {
         options={{ title: "Iniciar Sesión" }}
       />
       <Stack.Screen
-        name="register"
+        name="register" 
         component={Register}
         options={{ title: "Registrar" }}
       />

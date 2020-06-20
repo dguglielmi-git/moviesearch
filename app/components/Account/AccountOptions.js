@@ -5,11 +5,14 @@ import { map } from "lodash";
 import Modal from "../Modal";
 import ChangeDisplayNameForm from "./ChangeDisplayNameForm";
 import ChangeEmailForm from "./ChangeEmailForm";
+import ChangePasswordForm from "./ChangePasswordForm";
+import { useNavigation } from "@react-navigation/native";
 
 export default function AccountOptions(props) {
   const { userInfo, toastRef, setReloadUserInfo } = props;
   const [showModal, setShowModal] = useState(false);
   const [renderComponent, setRenderComponent] = useState(null);
+  const navigation = useNavigation();
 
   const selectedComponent = (key) => {
     switch (key) {
@@ -36,8 +39,16 @@ export default function AccountOptions(props) {
         setShowModal(true);
         break;
       case "password":
-        setRenderComponent(<Text>Cambiando Password</Text>);
+        setRenderComponent(
+          <ChangePasswordForm setShowModal={setShowModal} toastRef={toastRef} />
+        );
         setShowModal(true);
+        break;
+      case "listafavoritos":
+        setRenderComponent(
+          <View></View>
+        );
+        navigation.navigate("favorites",{userInfo});
         break;
       default:
         setRenderComponent(null);
@@ -75,13 +86,14 @@ export default function AccountOptions(props) {
     </View>
   );
 }
+
 function generateOptions(selectedComponent) {
   return [
     {
       title: "Cambiar Nombre y Apellido",
       iconType: "material-community",
       iconNameLeft: "account-circle",
-      iconColorLeft: "#ccc",
+      iconColorLeft: "#1164FE",
       iconNameRight: "chevron-right",
       iconColorRight: "#ccc",
       onPress: () => selectedComponent("displayName"),
@@ -90,7 +102,7 @@ function generateOptions(selectedComponent) {
       title: "Cambiar Email",
       iconType: "material-community",
       iconNameLeft: "at",
-      iconColorLeft: "#ccc",
+      iconColorLeft: "#1164FE",
       iconNameRight: "chevron-right",
       iconColorRight: "#ccc",
       onPress: () => selectedComponent("email"),
@@ -99,10 +111,19 @@ function generateOptions(selectedComponent) {
       title: "Cambiar Contraseña",
       iconType: "material-community",
       iconNameLeft: "lock-reset",
-      iconColorLeft: "#ccc",
+      iconColorLeft: "#1164FE",
       iconNameRight: "chevron-right",
       iconColorRight: "#ccc",
       onPress: () => selectedComponent("password"),
+    },
+    {
+      title: "Administrar Mis Listas",
+      iconType: "material-community",
+      iconNameLeft: "heart",
+      iconColorLeft: "#1164FE",
+      iconNameRight: "chevron-right",
+      iconColorRight: "#ccc",
+      onPress: () => selectedComponent("listafavoritos"),
     },
   ];
 }

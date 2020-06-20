@@ -104,6 +104,8 @@ const styles = StyleSheet.create({
   userInfoAvatar: {
     marginRight: 20,
     backgroundColor: "lightgray",
+    borderColor: "#fff",
+    borderWidth:5
   },
   displayName: {
     fontWeight: "bold",

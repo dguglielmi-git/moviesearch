@@ -1,10 +1,8 @@
 import React , {useState, useEffect} from 'react'
-import {View, Text} from 'react-native'
-import * as firebase from 'firebase'
-import Loading from '../../components/Loading'
 import UserGuest from './UserGuest'
+import * as firebase from 'firebase'
 import UserLogued from './UserLogued'
-
+import Loading from '../../components/Loading'
 
 export default function Account () {
     const [login, setLogin] = useState(null);
