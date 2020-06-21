@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { RecipeCard } from "../../app/AppStyles";
+import { RecipeCard } from "../../AppStyles";
 import {
   FlatList,
   Text,
@@ -8,12 +8,12 @@ import {
   Image,
   StyleSheet,
 } from "react-native";
-import Modal from "../components/Modal";
+import Modal from "../../components/Modal";
 import { Item, Input } from "native-base";
 import { Icon, Divider } from "react-native-elements";
 import { useNavigation } from "@react-navigation/native";
-import FiltersSearching from "./Movies/FiltersSearching";
-import { getEstrenos, getMovie } from "../controller/controllerApi";
+import FiltersSearching from "./FiltersSearching";
+import { getEstrenos, getMovie } from "../../controller/controllerApi";
 
 export default function Movies() {
   const navigation = useNavigation();

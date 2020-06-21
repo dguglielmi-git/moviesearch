@@ -36,14 +36,12 @@ export const getEstrenos = async function () {
   const apiKEY = "af158ebf42ce4f8e554bcd0ba82df8dc";
 
   const endpoint = `${url}${apiKEY}${discover}`;
-  //console.log("Buscando",endpoint);
   let resultado = await fetch(endpoint);
-  //console.log("resultado",resultado);
   let rtaApi = await resultado.json();
-  //console.log("respuesta bruta",rtaApi);
+  
   //Obtengo estrenos
   const estrenos = rtaApi.results;
-  console.log("Resultados", estrenos);
+
   //Dar formato a los datos para mostrar en la grilla
   let estrenosAMostrar = [];
   let i;
@@ -55,21 +53,17 @@ export const getEstrenos = async function () {
 
 export const getMovie = async function (busqueda) {
   //Parametros de conexion
-
   const url = "https://api.themoviedb.org/3/search/movie?api_key=";
   const discover = "&language=en-US&query=";
   const apiKEY = "af158ebf42ce4f8e554bcd0ba82df8dc";
   const endq = "&page=1&include_adult=false";
 
   const endpoint = `${url}${apiKEY}${discover}${busqueda}${endq}`;
-  //console.log("Buscando",endpoint);
   let resultado = await fetch(endpoint);
-  //console.log("resultado",resultado);
   let rtaApi = await resultado.json();
-  //console.log("respuesta bruta",rtaApi);
+
   //Obtengo estrenos
   const movies = rtaApi.results;
-  console.log("Resultados", movies);
   //Dar formato a los datos para mostrar en la grilla
   let moviesAMostrar = [];
   let i;
