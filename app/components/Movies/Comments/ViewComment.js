@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     width: "100%",
     flexDirection: "row",
-    marginTop: 30,
+    marginTop: 20,
   },
   innerContainer: {
     marginLeft: 10,
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
     marginLeft: 10,
-    color: "blue",
+    color: "#2D48B6",
   },
   infoDate: {
     fontSize: 16,

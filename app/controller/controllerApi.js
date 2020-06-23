@@ -28,6 +28,32 @@ const createTvData = (item, idArray) => {
   };
 };
 
+const crearGeneros = (item, idArray) => {
+  return {
+    value: item.name,
+  };
+};
+
+export const getGeneros = async function () {
+  const url = "https://api.themoviedb.org/3/genre/movie/list?api_key=";
+  const apiKey = "af158ebf42ce4f8e554bcd0ba82df8dc";
+  const discover = "&language=en-US";
+  const endpoint = `${url}${apiKey}${discover}`;
+  let resultado = await fetch(endpoint);
+  let rtaApi = await resultado.json();
+
+  //Obtengo estrenos
+  const generos = await rtaApi.genres;
+  const resultadoGeneros = [];
+
+  generos.map((gen) => {
+    resultadoGeneros.push({ value: gen.name });
+  });
+  console.log(resultadoGeneros);
+  //Dar formato a los datos para mostrar en la grilla
+  return resultadoGeneros;
+};
+
 export const getEstrenos = async function () {
   //Parametros de conexion
   const url = "https://api.themoviedb.org/3/discover/movie?api_key=";
@@ -38,7 +64,7 @@ export const getEstrenos = async function () {
   const endpoint = `${url}${apiKEY}${discover}`;
   let resultado = await fetch(endpoint);
   let rtaApi = await resultado.json();
-  
+
   //Obtengo estrenos
   const estrenos = rtaApi.results;
 
@@ -74,12 +100,11 @@ export const getMovie = async function (busqueda) {
   return moviesAMostrar;
 };
 
-
 export const getMoviesBy = async function (movieType) {
   //Parametros de conexion
   const apiKEY = "af158ebf42ce4f8e554bcd0ba82df8dc";
   const url = "";
-  const discover = "";  
+  const discover = "";
   const endpoint = "";
 
   switch (movieType) {
@@ -114,12 +139,11 @@ export const getMoviesBy = async function (movieType) {
   return moviesAMostrar;
 };
 
-
 export const getTvBy = async function (tvType) {
   //Parametros de conexion
   const apiKEY = "af158ebf42ce4f8e554bcd0ba82df8dc";
   const url = "";
-  const discover = "";  
+  const discover = "";
   const endpoint = "";
 
   switch (tvType) {

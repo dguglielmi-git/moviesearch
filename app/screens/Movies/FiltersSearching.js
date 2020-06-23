@@ -8,7 +8,7 @@ export default function FiltersSearching({
   setFilterSelected,
   setIsVisible,
   valueDropdown,
-  setValueDropdown
+  setValueDropdown,
 }) {
   const refDropDown = useRef();
   const refTvElement = useRef();
@@ -59,7 +59,9 @@ export default function FiltersSearching({
 
   const onChangeDropDownHandler = (val) => setValueDropdown(val);
 
-  const closeModal = () => setIsVisible(false);
+  const closeModal = () => {
+    setIsVisible(false);
+  };
 
   return (
     <View>
@@ -68,7 +70,7 @@ export default function FiltersSearching({
           source={require("../../../assets/filtrar.png")}
           style={{ height: 25, width: 25 }}
         />
-        <Text style={styles.textTitle}>Filtros</Text>
+        <Text style={styles.textTitle}>Filtros de Búsqueda</Text>
       </View>
 
       <Divider backgroundColor="gray" style={{ marginTop: 10 }} />
@@ -107,7 +109,11 @@ export default function FiltersSearching({
       />
 
       <View style={styles.buttonViewStyle}>
-        <Button title="Cerrar" onPress={closeModal} buttonStyle={styles.buttonStyle} />
+        <Button
+          title="Buscar"
+          onPress={closeModal}
+          buttonStyle={styles.buttonStyle}
+        />
       </View>
     </View>
   );
@@ -128,15 +134,15 @@ const styles = StyleSheet.create({
     color: "#496BC9",
   },
   buttonViewStyle: {
-    width: '100%',
-    marginBottom:10,
-    marginTop:10,
-    justifyContent:'center',
+    width: "100%",
+    marginBottom: 10,
+    marginTop: 10,
+    justifyContent: "center",
     flexDirection: "row",
   },
   buttonStyle: {
     width: 120,
-    backgroundColor: '#3E5EE0'
+    backgroundColor: "#3E5EE0",
   },
   checkStyle: {
     width: 130,

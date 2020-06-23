@@ -3,12 +3,14 @@ import { View, Text, StyleSheet } from "react-native";
 import { Container, Header, Tab, Tabs, TabHeading, Icon } from "native-base";
 import TabMiLista from "./TabMiLista";
 import TabListaOtros from './TabListaOtros'
+import TabGeneros from './TabGeneros'
 
 export default function Favorites() {
   return (
     <Container>
       <Tabs>
         <Tab
+         
           heading={
             <TabHeading>
               <Icon name="film" style={styles.icon}/>
@@ -35,7 +37,7 @@ export default function Favorites() {
             </TabHeading>
           }
         >
-          <TabMiLista />
+          <TabGeneros />
         </Tab>
       </Tabs>
       </Container>

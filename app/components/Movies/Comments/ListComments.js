@@ -10,8 +10,6 @@ export default function ListComments({ userData }) {
   const unClickHand = () => setPosHand("flexDirection: 'row', justifyContent: 'flex-start', marginTop: 20");
   return (
     <View style={styles.containerComentarios}>
-      <Text style={styles.tituloComentarios}>Opiniones de los Usuarios</Text>
-
       {userData.map((user) => (
         <ViewComment userData={user} />
       ))}
@@ -37,9 +35,7 @@ const styles = StyleSheet.create({
     flex: 1,
     width: "100%",
     borderTopWidth: 0.7,
-    borderTopColor: "#7CB1D7",
-    marginTop: 20,
-    paddingTop: 10,
+    borderTopColor: "#7CB1D7"
   },
   textoComentario: {
     marginTop: 10,
