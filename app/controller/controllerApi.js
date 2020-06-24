@@ -100,6 +100,23 @@ export const getMovie = async function (busqueda) {
   return moviesAMostrar;
 };
 
+export const getMovieByID = async function (id) {
+  //Parametros de conexion
+  const url = `https://api.themoviedb.org/3/movie/${id}?api_key=`;
+  const apiKEY = "af158ebf42ce4f8e554bcd0ba82df8dc";
+  const endq = "&language=en-US";
+
+  const endpoint = `${url}${apiKEY}${endq}`;
+  let resultado = await fetch(endpoint);
+  let rtaApi = await resultado.json();
+
+  //Obtengo estrenos
+  const movies = rtaApi;
+  //console.log(movies);
+
+  return createData(movies, 1);
+};
+
 export const getMoviesBy = async function (movieType) {
   //Parametros de conexion
   const apiKEY = "af158ebf42ce4f8e554bcd0ba82df8dc";

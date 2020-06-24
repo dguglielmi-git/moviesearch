@@ -15,7 +15,7 @@ import { useNavigation } from "@react-navigation/native";
 import FiltersSearching from "./FiltersSearching";
 import { getEstrenos, getMovie } from "../../controller/controllerApi";
 
-export default function Movies() {
+export default function Movies({item, setItem, userLogin}) {
   const navigation = useNavigation();
   const [search, setSearch] = useState("");
   const [estrenos, setEstrenos] = useState([]);
@@ -38,7 +38,10 @@ export default function Movies() {
     setEstrenos(newPeliculas);
   };
 
-  const onPressMovie = (item) => navigation.navigate("moviesdesc", { item });
+  const onPressMovie = (item_) => {
+    setItem(item_)
+    navigation.navigate("moviesdesc");
+  }
   const updateSearch = (e) => setSearch(e.nativeEvent.text);
   const onSubmitSearch = () => buscarPelicula();
 

@@ -15,7 +15,7 @@ const { width, height } = Dimensions.get("window");
 // orientation must fixed
 const SCREEN_WIDTH = width < height ? width : height;
 
-export default function TabListaOtros() {
+export default function TabListaOtros({setLista}) {
   const [miLista, setMiLista] = useState([]);
 
   const listaprivada = [

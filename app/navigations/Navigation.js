@@ -1,59 +1,76 @@
-import React from "react";
+import React, { useState, useContext } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Icon } from "react-native-elements";
 import MovieStack from "./MovieStack";
 import FavoritesStack from "./FavoritesStack";
-import TopMoviesStack from "./TopMoviesStack";
-import SearchStack from "./SearchStack";
 import AccountStack from "./AccountStack";
+import MyContextProvider from "../hoc/MyContext";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
 export default function Navigation() {
-  return (
-    <NavigationContainer>
-      <Tab.Navigator
-        initialRouteName="moviestack"
-        tabBarOptions={{
-          inactiveTintColor: "#646464",
-          activeTintColor: "#1164FE",
+  const [userLogin, setUserLogin] = useState(false);
+  const [userName, setUserName] = useState("");
+  const [emailUser, setEmailUser] = useState("");
+  const [testProvider, setTestProvider] = useState("PRUEBA PROVIDER");
 
-        }}
-        screenOptions={({ route }) => ({
-          tabBarIcon: ({ color }) => screenOptions(route, color),
-        })}
-      >
-        <Tab.Screen
-          name="account"
-          component={AccountStack}
-          options={{ title: "Cuenta" }}
-        />
-       <Tab.Screen
-          name="moviestack"
-          component={MovieStack}
-          options={{ title: "Peliculas" }}
-        />
-        <Tab.Screen
-          name="favorites"
-          component={FavoritesStack}
-          options={{ title: "Favoritos" }}
-        />
-        <Tab.Screen
-          name="search"
-          component={SearchStack}
-          options={{ title: "Buscar" }}
-        />
-        <Tab.Screen
-          name="menu"
-          component={TopMoviesStack}
-          options={{ title: "Menu" }}
-        />
-      </Tab.Navigator>
-     
-    </NavigationContainer>
+  return (
+    <MyContextProvider>
+      <NavigationContainer>
+        <Tab.Navigator
+          initialRouteName="moviestack"
+          tabBarOptions={{
+            inactiveTintColor: "#646464",
+            activeTintColor: "#1164FE",
+          }}
+          screenOptions={({ route }) => ({
+            tabBarIcon: ({ color }) => screenOptions(route, color),
+          })}
+        >
+          <Tab.Screen
+            name="account"
+            options={{ title: "Cuenta" }}
+            userLogin={userLogin}
+          >
+            {() => (
+              <AccountStack
+                userLogin={userLogin}
+                setUserLogin={setUserLogin}
+                userName={userName}
+                setUserName={setUserName}
+                setEmailUser={setEmailUser}
+              />
+            )}
+          </Tab.Screen>
+          <Tab.Screen name="moviestack" options={{ title: "Peliculas" }}>
+            {() => (
+              <MovieStack
+                userLogin={userLogin}
+                setUserLogin={setUserLogin}
+                userName={userName}
+                setUserName={setUserName}
+                emailUser={emailUser}
+                setEmailUser={setEmailUser}
+              />
+            )}
+          </Tab.Screen>
+
+          <Tab.Screen name="favorites" options={{ title: "Favoritos" }}>
+            {() => (
+              <FavoritesStack
+                userLogin={userLogin}
+                emailUser={emailUser}
+                setUserName={setUserName}
+                setEmailUser={setEmailUser}
+              />
+            )}
+          </Tab.Screen>
+        </Tab.Navigator>
+      </NavigationContainer>
+    </MyContextProvider>
   );
 }
 

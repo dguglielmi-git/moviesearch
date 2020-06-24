@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { List, ListItem, Right, Left, Icon, Body } from "native-base";
+import React, { useState, useEffect , useContext} from "react";
+import * as firebase from "firebase";
 import {
   View,
   Text,
@@ -10,13 +10,28 @@ import {
   TouchableHighlight,
   Dimensions,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import NoLogged from "../../components/NoLogged";
+import ListaPeliculas from "./ListaPeliculas";
+import Loading from "../../components/Loading";
+import {MyContext} from "../../hoc/MyContext";
+
 const { width, height } = Dimensions.get("window");
 // orientation must fixed
 const SCREEN_WIDTH = width < height ? width : height;
 
-export default function TabMiLista() {
+export default function TabMiLista({
+  userLogin,
+  emailUser,
+  setLista,
+  setUserName,
+  setEmailUser,
+}) {
   const [miLista, setMiLista] = useState([]);
-
+  const navigation = useNavigation();
+  const [login, setLogin] = useState(null);
+  const {num } = useContext(MyContext);
+  console.log(num);
   const listaprivada = [
     {
       id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",
@@ -43,16 +58,44 @@ export default function TabMiLista() {
       title: "Third Item",
     },
   ];
+
+  // Esta lista es la que se le pasa como parametro al visor del contenido de
+  //las ListaPeliculas
+  const lista = [
+    {
+      id: 419704,
+      title: "Ad Adstra",
+      imagen: "https://image.tmdb.org/t/p/w200/xBHvZcjRiWyobQ9kxBhO6B2dtRI.jpg",
+      overview:
+        "The near future, a time when both hope and hardships drive humanity to look to the stars and beyond. While a mysterious phenomenon menaces to destroy life on planet Earth, astronaut Roy McBride undertakes a mission across the immensity of space and its many perils to uncover the truth about a lost expedition that decades before boldly faced emptiness and silence in search of the unknown.",
+    },
+    {
+      id: 419704,
+      title: "Ad Adstra",
+      imagen: "https://image.tmdb.org/t/p/w200/xBHvZcjRiWyobQ9kxBhO6B2dtRI.jpg",
+      overview:
+        "The near future, a time when both hope and hardships drive humanity to look to the stars and beyond. While a mysterious phenomenon menaces to destroy life on planet Earth, astronaut Roy McBride undertakes a mission across the immensity of space and its many perils to uncover the truth about a lost expedition that decades before boldly faced emptiness and silence in search of the unknown.",
+    },
+  ];
   const cargarLista = async () => {
     setMiLista(listaprivada);
   };
 
   useEffect(() => {
+    firebase.auth().onAuthStateChanged((user) => {
+      // Puede devolver null = usuario no logueado
+      // o puede devolver un objeto con los datos del usuario e indica que el usuario esta logueado
+      !user ? setLogin(false) : setLogin(true);
+    });
+    console.log("Current USER: " + firebase.auth().currentUser);
+
     cargarLista();
   }, []);
 
   const onPressLista = (item) => {
-    console.log("Click Press Lista");
+    console.log(item);
+    setLista(lista);
+    navigation.navigate("showList");
   };
 
   const renderLista = ({ item }) => (
@@ -67,34 +110,40 @@ export default function TabMiLista() {
       </View>
     </TouchableHighlight>
   );
+  if (login === null) return <Loading isVisible={true} text="Cargando..." />;
 
-  return (
-    <View style={styles.mainContainer}>
-      <View style={{ alignSelf: "center" }}>
-        <Image
-          source={require("../../../assets/img/folder.png")}
-          style={styles.Imagen}
-        />
-        <Text style={styles.tituloGeneros}>Mis Listas</Text>
-      </View>
-      <View style={styles.botonAgregar}>
-      <TouchableHighlight>
-        <Image
-          source={require("../../../assets/anadir.png")}
-          style={styles.imgBotonAgregar}
-        />
-        </TouchableHighlight>
-      </View>
+  return !login ? (
+    <NoLogged />
+  ) : (
+    
+      <View style={styles.mainContainer}>
+        <View style={{ alignSelf: "center" }}>
+          <Image
+            source={require("../../../assets/img/folder.png")}
+            style={styles.Imagen}
+          />
+          <Text style={styles.tituloGeneros}>Mis Listas</Text>
+        </View>
+        <View style={styles.botonAgregar}>
+          <TouchableHighlight>
+            <Image
+              source={require("../../../assets/anadir.png")}
+              style={styles.imgBotonAgregar}
+            />
+          </TouchableHighlight>
+        </View>
+   
 
-      <FlatList
-        vertical
-        showsVerticalScrollIndicator={false}
-        numColumns={1}
-        data={miLista}
-        renderItem={renderLista}
-        keyExtractor={(item) => `${item.id}`}
-      />
-    </View>
+        <FlatList
+          vertical
+          showsVerticalScrollIndicator={false}
+          numColumns={1}
+          data={miLista}
+          renderItem={renderLista}
+          keyExtractor={(item) => `${item.id}`}
+        />
+      </View>
+    
   );
 }
 

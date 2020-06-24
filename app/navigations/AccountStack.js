@@ -6,21 +6,40 @@ import Register from "../screens/Account/Register";
 
 const Stack = createStackNavigator();
 
-export default function AccountStack() {
+export default function AccountStack({
+  userLogin,
+  setUserLogin,
+  userName,
+  setUserName,
+  setEmailUser,
+}) {
+  console.log("rastro userLogin: " + userLogin);
+
   return (
     <Stack.Navigator>
+      <Stack.Screen name="account" options={{ title: "Mi Cuenta" }}>
+        {() => (
+          <Account
+            setUserLogin={setUserLogin}
+            userName={userName}
+            setUserName={setUserName}
+            setEmailUser={setEmailUser}
+          />
+        )}
+      </Stack.Screen>
+      <Stack.Screen name="login" options={{ title: "Iniciar Sesión" }}>
+        {() => (
+          <Login
+            userLogin={userLogin}
+            setUserLogin={setUserLogin}
+            userName={userName}
+            setUserName={setUserName}
+            setEmailUser={setEmailUser}
+          />
+        )}
+      </Stack.Screen>
       <Stack.Screen
-        name="account"
-        component={Account}
-        options={{ title: "Mi Cuenta" }}
-      />
-      <Stack.Screen
-        name="login"
-        component={Login}
-        options={{ title: "Iniciar Sesión" }}
-      />
-      <Stack.Screen
-        name="register" 
+        name="register"
         component={Register}
         options={{ title: "Registrar" }}
       />

@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
+import * as firebase from "firebase";
 import {
   ScrollView,
   Text,
   View,
   StyleSheet,
   Image,
-  Dimensions
+  Dimensions,
+  TouchableHighlight,
 } from "react-native";
+import { Icon } from "react-native-elements";
 import InfoPeli from "../../components/Movies/InfoPeli";
 import CommentMovie from "../../components/Movies/Comments/CommentMovie";
 import ListComments from "../../components/Movies/Comments/ListComments";
@@ -55,11 +58,35 @@ const userData = [
   },
 ];
 
-export default function MoviesDesc({ route, navigation }) {
-  const [comentario, setComentario] = useState("");
-  const { item } = route.params;
-  const updateComentario = (coment) => setComentario(coment);
+export default function MoviesDesc({
+  item,
+  setItem,
+  userLogin,
+  userName,
+  emailUser,
+  setEmailUser,
+}) {
+  const [login, setLogin] = useState(null);
 
+  const agregarFavorito = () => {
+    console.log("Agregar favorito");
+
+    //console.log(item);
+    //Imagen: item.imagen
+    //id: item.id
+    //titulo: item.title
+    //desc: item.overview
+    //Se debe seleccionar la lista donde se desea agregar la pelicula.
+    // Si no hay listas, dar la posibilidad de crearlas.
+  };
+
+  useEffect(() => {
+    firebase.auth().onAuthStateChanged((user) => {
+      // Puede devolver null = usuario no logueado
+      // o puede devolver un objeto con los datos del usuario e indica que el usuario esta logueado
+      !user ? setLogin(false) : setLogin(true);
+    });
+  }, []);
   return (
     <ScrollView style={styles.container}>
       <View style={styles.imageContainer}>
@@ -69,12 +96,35 @@ export default function MoviesDesc({ route, navigation }) {
           resizeMode="stretch"
         />
       </View>
+
+      <View style={styles.agregarFavoritos}>
+        <Text style={styles.textFavoritos} onPress={agregarFavorito}>
+          Agregar a Favoritos
+        </Text>
+        <TouchableHighlight underlayColor="white" onPress={agregarFavorito}>
+          <Icon
+            type="material-community"
+            name="cards-heart"
+            size={35}
+            iconStyle={styles.iconFavoritos}
+          />
+        </TouchableHighlight>
+      </View>
+
       <View style={styles.infoRecipeContainer}>
         <Text style={styles.infoRecipeName}>{item.title}</Text>
 
         <InfoPeli item={item} />
-        <CommentMovie comentario={updateComentario} />
-        <ListComments userData={userData} />
+        <CommentMovie
+          login={login}
+          userName={userName}
+          emailUser={emailUser}
+        />
+        <ListComments
+          userData={userData}
+          userName={userName}
+          emailUser={emailUser}
+        />
       </View>
     </ScrollView>
   );
@@ -117,7 +167,7 @@ const styles = StyleSheet.create({
   infoRecipeContainer: {
     flex: 1,
     margin: 25,
-    marginTop: 20,
+    //marginTop: 20,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -161,5 +211,20 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "black",
     textAlign: "center",
+  },
+  agregarFavoritos: {
+    marginBottom: -40,
+    marginLeft: 10,
+    marginTop: 5,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-end",
+  },
+  iconFavoritos: {
+    color: "#1C51CD",
+  },
+  textFavoritos: {
+    color: "#2B5FD7",
+    marginLeft: 5,
   },
 });

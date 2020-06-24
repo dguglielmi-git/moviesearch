@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from "react-native";
 import { Icon } from "react-native-elements";
 import ViewComment from "./ViewComment";
 
-export default function ListComments({ userData }) {
+export default function ListComments({ userData, userName, emailUser}) {
   const [posHand, setPosHand] = useState("");
 
   const clickHand = () => setPosHand("flexDirection: 'row', justifyContent: 'flex-start', marginTop: 20");
@@ -11,7 +11,7 @@ export default function ListComments({ userData }) {
   return (
     <View style={styles.containerComentarios}>
       {userData.map((user) => (
-        <ViewComment userData={user} />
+        <ViewComment userData={user} userName={userName} emailUser={emailUser} />
       ))}
       <View style={styles.textoComentario}>
         <View

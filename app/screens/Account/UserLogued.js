@@ -7,7 +7,7 @@ import Loading from "../../components/Loading";
 import InfoUser from "../../components/Account/InfoUser";
 import AccountOptions from "../../components/Account/AccountOptions";
 
-export default function UserLogued() {
+export default function UserLogued({setUserLogin, setUserName}) {
   const toastRef = useRef();
   const [userInfo, setUserInfo] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -21,6 +21,12 @@ export default function UserLogued() {
     })();
     setReloadUserInfo(false);
   }, [reloadUserInfo]);
+
+  const cerrarSesion = () => {
+    firebase.auth().signOut();
+    setUserName('');
+    setUserLogin(false);
+  }
 
   return (
     <View style={styles.viewUserInfo}>
@@ -43,7 +49,7 @@ export default function UserLogued() {
         title="Cerrar Sesion"
         buttonStyle={styles.btnCloseSession}
         titleStyle={styles.btnCloseSessionTest}
-        onPress={() => firebase.auth().signOut()}
+        onPress={cerrarSesion}
       />
       <Toast ref={toastRef} position="center" opacity={0.9} />
       <Loading text={loadingText} isVisible={loading} />

@@ -5,10 +5,17 @@ import { isEmpty } from "lodash";
 import { validateEmail } from "../../utils/validations";
 import { useNavigation } from "@react-navigation/native";
 import * as firebase from "firebase";
-import Loading from '../Loading'
+import Loading from "../Loading";
 
-export default function LoginForm(props) {
-  const { toastRef } = props;
+export default function LoginForm({
+  toastRef,
+  setUserLogin,
+  userLogin,
+  callFromMovie,
+  setUserName,
+  setEmailUser,
+}) {
+  //const { toastRef , setUserLogin, userLogin} = props;
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState(defaultFormValue());
   const [loading, setLoading] = useState(false);
@@ -20,8 +27,8 @@ export default function LoginForm(props) {
       [type]: e.nativeEvent.text,
     });
   };
+
   const onSubmit = () => {
-    
     if (isEmpty(formData.email) || isEmpty(formData.password)) {
       toastRef.current.show("Todos los campos son obligatorios");
     } else if (!validateEmail(formData.email)) {
@@ -33,7 +40,14 @@ export default function LoginForm(props) {
         .signInWithEmailAndPassword(formData.email, formData.password)
         .then((response) => {
           setLoading(false);
-          navigation.navigate("account");
+          setUserLogin(true);
+          setUserName(response.user.displayName);
+          setEmailUser(formData.email);
+          if (callFromMovie) {
+            navigation.navigate("moviesdesc");
+          } else {
+            navigation.navigate("account");
+          }
         })
         .catch(() => {
           setLoading(false);
@@ -70,7 +84,7 @@ export default function LoginForm(props) {
             onPress={() => setShowPassword(!showPassword)}
           />
         }
-      /> 
+      />
       <Button
         title="Iniciar sesión"
         containerStyle={styles.btnContainerLogin}

@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
+import * as firebase from "firebase";
 import {
   View,
   Text,
@@ -11,11 +12,20 @@ import { Dropdown } from "react-native-material-dropdown";
 import { Container, Content, List, ListItem, Right, Button } from "native-base";
 import { getGeneros } from "../../controller/controllerApi";
 import Toast from "react-native-easy-toast";
+import NoLogged from "../../components/NoLogged";
+import Loading from "../../components/Loading";
+
+const {Consumer} = React.createContext();
 const { width, height } = Dimensions.get("window");
 // orientation must fixed
 const SCREEN_WIDTH = width < height ? width : height;
 
-export default function TabMiLista() {
+export default function TabMiLista({
+  userLogin,
+  emailUser,
+  setUserName,
+  setEmailUser,
+}) {
   const refDropDown = useRef();
   const itemRef = useRef();
   const toastRef = useRef();
@@ -24,8 +34,14 @@ export default function TabMiLista() {
   const [listGenerosFavoritos, setListGenerosFavoritos] = useState([]);
   const [listaGeneros, setListaGeneros] = useState([]);
   const onChangeDropDownHandler = (val) => setValueDropdown(val);
-
+  const [login, setLogin] = useState(null);
+ 
   useEffect(() => {
+    firebase.auth().onAuthStateChanged((user) => {
+      // Puede devolver null = usuario no logueado
+      // o puede devolver un objeto con los datos del usuario e indica que el usuario esta logueado
+      !user ? setLogin(false) : setLogin(true);
+    });
     getGeneros().then((resul) => setListaGeneros(resul));
   }, []);
 
@@ -82,7 +98,7 @@ export default function TabMiLista() {
     // Llamar a una funcion de controller que guarde los generos acumulados en:
     // listGenerosFavoritos
   };
-  
+
   const renderItems = (item) => (
     <ListItem style={styles.listItem}>
       <Text>{item.genero}</Text>
@@ -98,7 +114,11 @@ export default function TabMiLista() {
     </ListItem>
   );
 
-  return (
+  if (login === null) return <Loading isVisible={true} text="Cargando..." />;
+
+  return !login ? (
+    <NoLogged />
+  ) : (
     <View style={{ height: "100%" }}>
       <View style={styles.cabecera}>
         <Image
@@ -108,6 +128,11 @@ export default function TabMiLista() {
         <Text style={styles.tituloGeneros}>
           Configuración de Lista de Generos Favoritos
         </Text>
+        <Consumer>
+          {(context) => {
+            <Text>{context.testProvider} </Text>
+          }}
+        </Consumer>
       </View>
       <View style={styles.Agregar}>
         <View style={{ width: 300 }}>

@@ -2,10 +2,12 @@ import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Avatar, Icon } from "react-native-elements";
 
-export default function ViewComment({ userData }) {
+export default function ViewComment({ userData, userName, emailUser }) {
   const starCant = (cant) => {
     var payment = [];
 
+    //userName = utilizado para detectar si un comentario es del propio usuario
+    // debe aparecer la opcion de eliminar comentario.
     for (let i = 0; i < cant; i++) {
       payment.push(
         <Icon

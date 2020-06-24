@@ -2,28 +2,41 @@ import React, { useState } from "react";
 import { Button as Boton } from "native-base";
 import { AirbnbRating, Button } from "react-native-elements";
 import { View, StyleSheet, TextInput, Text } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
-export default function Commentmovie({ comentario }) {
-  const [visible, setVisible] = useState(false);
+export default function Commentmovie({ login, userName, emailUser }) {
   const [puntaje, setPuntaje] = useState(0);
+  const [comment, setComment] = useState("");
+  const navigation = useNavigation();
 
   const ratingCompleted = (rating) => setPuntaje(rating);
-  const showComment = () => setVisible(true);
-  const sendComment = () => setVisible(false);
-  const onChangeTxt = (e) => comentario(e);
+
+  const sendComment = () => {
+    // userName: 'Daniel Guglielmi
+    // mail: setEmailUser
+    // fecha: funcion
+    // vote: puntaje
+    // Utilizar esta estructura para impactar los datos en la base
+    // Luego de la llamada a esta funcion se deberian re-renderizar los comentarios
+  };
+
+  const onChangeTxt = (e) => setComment(e);
 
   return (
     <View style={styles.comentariosContainer}>
       <View style={{ height: 120 }}>
-        <View style={{ flexDirection: "row", justifyContent: "space-between"}}>
+        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
           <Text style={{ fontSize: 15, fontWeight: "bold" }}>Comentario</Text>
-          <Boton
-            rounded
-            bordered
-            style={{ width: 95, height: 25, justifyContent: "center"}}
-          >
-            <Text>Iniciar Sesión</Text>
-          </Boton>
+          {!login && (
+            <Boton
+              rounded
+              bordered
+              style={{ width: 95, height: 25, justifyContent: "center" }}
+              onPress={() => navigation.navigate("login")}
+            >
+              <Text>Iniciar Sesión</Text>
+            </Boton>
+          )}
         </View>
         <TextInput
           style={styles.input}
@@ -39,11 +52,13 @@ export default function Commentmovie({ comentario }) {
             showRating={false}
           />
         </View>
-        <Button
-          title="Comentar"
-          buttonStyle={styles.btnStyle}
-          onPress={sendComment}
-        />
+        {userLogin && (
+          <Button
+            title="Comentar"
+            buttonStyle={styles.btnStyle}
+            onPress={sendComment}
+          />
+        )}
       </View>
     </View>
   );

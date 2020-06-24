@@ -5,7 +5,14 @@ import { useNavigation } from "@react-navigation/native";
 import Toast from "react-native-easy-toast";
 import LoginForm from "../../components/Account/LoginForm";
 
-export default function Login() {
+export default function Login({
+  userLogin,
+  setUserLogin,
+  callFromMovie,
+  userName,
+  setUserName,
+  setEmailUser,
+}) {
   const toastRef = useRef();
 
   return (
@@ -16,11 +23,17 @@ export default function Login() {
         style={styles.logo}
       />
       <View style={styles.viewContainer}>
-        <LoginForm toastRef={toastRef}/>
+        <LoginForm
+          toastRef={toastRef}
+          userLogin={userLogin}
+          setUserLogin={setUserLogin}
+          callFromMovie={callFromMovie}
+          setUserName={setUserName}
+          setEmailUser={setEmailUser}
+        />
         <CreateAccount />
       </View>
       <Divider style={styles.divider} />
-      <Text>Social Login</Text>
       <Toast ref={toastRef} position="center" opacity={0.9} />
     </ScrollView>
   );
