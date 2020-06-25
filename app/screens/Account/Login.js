@@ -6,12 +6,7 @@ import Toast from "react-native-easy-toast";
 import LoginForm from "../../components/Account/LoginForm";
 
 export default function Login({
-  userLogin,
-  setUserLogin,
   callFromMovie,
-  userName,
-  setUserName,
-  setEmailUser,
 }) {
   const toastRef = useRef();
 
@@ -25,11 +20,7 @@ export default function Login({
       <View style={styles.viewContainer}>
         <LoginForm
           toastRef={toastRef}
-          userLogin={userLogin}
-          setUserLogin={setUserLogin}
           callFromMovie={callFromMovie}
-          setUserName={setUserName}
-          setEmailUser={setEmailUser}
         />
         <CreateAccount />
       </View>

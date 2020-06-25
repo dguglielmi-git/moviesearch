@@ -1,21 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import Movies from "../screens/Movies/Movies";
 import MoviesDesc from "../screens/Movies/MoviesDesc";
 import Login from "../screens/Account/Login";
+import {MyContext} from '../hoc/MyContext'
 
 const Stack = createStackNavigator();
 
-export default function MovieStack({
-  userLogin,
-  setUserLogin,
-  userName,
-  setUserName,
-  emailUser,
-  setEmailUser
-}) {
+export default function MovieStack() {
   const [item, setItem] = useState([]);
-  const [callFromMovie, setCallFromMovie] = useState(true);
+  const {userLogin} = useContext(MyContext);
+  
   return (
     <Stack.Navigator>
       <Stack.Screen name="movies" options={{ title: "Movies" }}>
@@ -25,27 +20,10 @@ export default function MovieStack({
         name="moviesdesc"
         options={{ title: "Detalle Peliculas & Series" }}
       >
-        {() => (
-          <MoviesDesc
-            item={item}
-            setItem={setItem}
-            userLogin={userLogin}
-            userName={userName}
-            emailUser={emailUser}
-            setEmailUser={setEmailUser}
-          />
-        )}
+        {() => <MoviesDesc item={item} />}
       </Stack.Screen>
       <Stack.Screen name="login" options={{ title: "Iniciar Sesión" }}>
-        {() => (
-          <Login
-            userLogin={userLogin}
-            setUserLogin={setUserLogin}
-            callFromMovie={callFromMovie}
-            setUserName={setUserName}
-            setEmailUser={setEmailUser}
-          />
-        )}
+        {() => <Login callFromMovie={true} />}
       </Stack.Screen>
     </Stack.Navigator>
   );

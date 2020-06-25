@@ -1,13 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Button as Boton } from "native-base";
 import { AirbnbRating, Button } from "react-native-elements";
 import { View, StyleSheet, TextInput, Text } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import {MyContext} from '../../../hoc/MyContext'
 
-export default function Commentmovie({ login, userName, emailUser }) {
+export default function Commentmovie() {
   const [puntaje, setPuntaje] = useState(0);
   const [comment, setComment] = useState("");
   const navigation = useNavigation();
+  const {checkLogin } = useContext(MyContext);
 
   const ratingCompleted = (rating) => setPuntaje(rating);
 
@@ -27,7 +29,7 @@ export default function Commentmovie({ login, userName, emailUser }) {
       <View style={{ height: 120 }}>
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
           <Text style={{ fontSize: 15, fontWeight: "bold" }}>Comentario</Text>
-          {!login && (
+          {!checkLogin() && (
             <Boton
               rounded
               bordered
@@ -52,7 +54,7 @@ export default function Commentmovie({ login, userName, emailUser }) {
             showRating={false}
           />
         </View>
-        {userLogin && (
+        {checkLogin() && (
           <Button
             title="Comentar"
             buttonStyle={styles.btnStyle}

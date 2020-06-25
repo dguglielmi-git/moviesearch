@@ -1,65 +1,45 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { Container, Header, Tab, Tabs, TabHeading, Icon } from "native-base";
 import TabMiLista from "./TabMiLista";
-import TabListaOtros from "./TabListaOtros";
 import TabGeneros from "./TabGeneros";
+import TabListaOtros from "./TabListaOtros";
+import { Text, StyleSheet } from "react-native";
+import { Container, Tab, Tabs, TabHeading, Icon } from "native-base";
 
-
-export default function Favorites({
-  userLogin,
-  emailUser,
-  setLista,
-  setUserName,
-  setEmailUser,
-}) {
+export default function Favorites() {
   return (
-
-      <Container>
-        <Tabs>
-          <Tab
-            heading={
-              <TabHeading>
-                <Icon name="film" style={styles.icon} />
-                <Text style={styles.titulosML}>Mis Listas</Text>
-              </TabHeading>
-            }
-          >
-            <TabMiLista
-              userLogin={userLogin}
-              emailUser={emailUser}
-              setLista={setLista}
-              setUserName={setUserName}
-              setEmailUser={setEmailUser}
-            />
-          </Tab>
-          <Tab
-            heading={
-              <TabHeading>
-                <Icon name="film" style={styles.icon} />
-                <Text style={styles.titulos}>Listas Públicas</Text>
-              </TabHeading>
-            }
-          >
-            <TabListaOtros setLista={setLista} />
-          </Tab>
-          <Tab
-            heading={
-              <TabHeading>
-                <Text style={styles.titulos}>Generos Favoritos</Text>
-              </TabHeading>
-            }
-          >
-            <TabGeneros
-              userLogin={userLogin}
-              emailUser={emailUser}
-              setUserName={setUserName}
-              setEmailUser={setEmailUser}
-            />
-          </Tab>
-        </Tabs>
-      </Container>
-  
+    <Container>
+      <Tabs>
+        <Tab
+          heading={
+            <TabHeading>
+              <Icon name="film" style={styles.icon} />
+              <Text style={styles.titulosML}>Mis Listas</Text>
+            </TabHeading>
+          }
+        >
+          <TabMiLista />
+        </Tab>
+        <Tab
+          heading={
+            <TabHeading>
+              <Icon name="film" style={styles.icon} />
+              <Text style={styles.titulos}>Listas Públicas</Text>
+            </TabHeading>
+          }
+        >
+          <TabListaOtros />
+        </Tab>
+        <Tab
+          heading={
+            <TabHeading>
+              <Text style={styles.titulos}>Generos Favoritos</Text>
+            </TabHeading>
+          }
+        >
+          <TabGeneros />
+        </Tab>
+      </Tabs>
+    </Container>
   );
 }
 

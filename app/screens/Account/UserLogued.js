@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useContext } from "react";
 import { StyleSheet, View, Text } from "react-native";
 import { Button } from "react-native-elements";
 import * as firebase from "firebase";
@@ -6,13 +6,15 @@ import Toast from "react-native-easy-toast";
 import Loading from "../../components/Loading";
 import InfoUser from "../../components/Account/InfoUser";
 import AccountOptions from "../../components/Account/AccountOptions";
+import { MyContext } from "../../hoc/MyContext";
 
-export default function UserLogued({setUserLogin, setUserName}) {
+export default function UserLogued({ setLogin }) {
   const toastRef = useRef();
   const [userInfo, setUserInfo] = useState(null);
   const [loading, setLoading] = useState(false);
   const [loadingText, setLoadingText] = useState("");
   const [reloadUserInfo, setReloadUserInfo] = useState(false);
+  const { cerrarSesion } = useContext(MyContext);
 
   useEffect(() => {
     (async () => {
@@ -21,12 +23,6 @@ export default function UserLogued({setUserLogin, setUserName}) {
     })();
     setReloadUserInfo(false);
   }, [reloadUserInfo]);
-
-  const cerrarSesion = () => {
-    firebase.auth().signOut();
-    setUserName('');
-    setUserLogin(false);
-  }
 
   return (
     <View style={styles.viewUserInfo}>

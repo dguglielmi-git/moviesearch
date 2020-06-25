@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Icon } from "react-native-elements";
 import ViewComment from "./ViewComment";
+import {MyContext} from '../../../hoc/MyContext'
 
-export default function ListComments({ userData, userName, emailUser}) {
+export default function ListComments({ userData}) {
   const [posHand, setPosHand] = useState("");
-
+  const {emailUser, userName} = useContext(MyContext);
+  
   const clickHand = () => setPosHand("flexDirection: 'row', justifyContent: 'flex-start', marginTop: 20");
   const unClickHand = () => setPosHand("flexDirection: 'row', justifyContent: 'flex-start', marginTop: 20");
   return (

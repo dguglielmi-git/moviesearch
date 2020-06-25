@@ -1,6 +1,5 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Icon } from "react-native-elements";
 import MovieStack from "./MovieStack";
@@ -9,13 +8,8 @@ import AccountStack from "./AccountStack";
 import MyContextProvider from "../hoc/MyContext";
 
 const Tab = createBottomTabNavigator();
-const Stack = createStackNavigator();
 
 export default function Navigation() {
-  const [userLogin, setUserLogin] = useState(false);
-  const [userName, setUserName] = useState("");
-  const [emailUser, setEmailUser] = useState("");
-  const [testProvider, setTestProvider] = useState("PRUEBA PROVIDER");
 
   return (
     <MyContextProvider>
@@ -33,41 +27,18 @@ export default function Navigation() {
           <Tab.Screen
             name="account"
             options={{ title: "Cuenta" }}
-            userLogin={userLogin}
-          >
-            {() => (
-              <AccountStack
-                userLogin={userLogin}
-                setUserLogin={setUserLogin}
-                userName={userName}
-                setUserName={setUserName}
-                setEmailUser={setEmailUser}
-              />
-            )}
-          </Tab.Screen>
-          <Tab.Screen name="moviestack" options={{ title: "Peliculas" }}>
-            {() => (
-              <MovieStack
-                userLogin={userLogin}
-                setUserLogin={setUserLogin}
-                userName={userName}
-                setUserName={setUserName}
-                emailUser={emailUser}
-                setEmailUser={setEmailUser}
-              />
-            )}
-          </Tab.Screen>
-
-          <Tab.Screen name="favorites" options={{ title: "Favoritos" }}>
-            {() => (
-              <FavoritesStack
-                userLogin={userLogin}
-                emailUser={emailUser}
-                setUserName={setUserName}
-                setEmailUser={setEmailUser}
-              />
-            )}
-          </Tab.Screen>
+            component={AccountStack}
+          />
+          <Tab.Screen
+            name="moviestack"
+            options={{ title: "Peliculas" }}
+            component={MovieStack}
+          />
+          <Tab.Screen
+            name="favorites"
+            options={{ title: "Favoritos" }}
+            component={FavoritesStack}
+          />
         </Tab.Navigator>
       </NavigationContainer>
     </MyContextProvider>

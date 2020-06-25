@@ -58,27 +58,24 @@ const userData = [
   },
 ];
 
-export default function MoviesDesc({
-  item,
-  setItem,
-  userLogin,
-  userName,
-  emailUser,
-  setEmailUser,
-}) {
+export default function MoviesDesc({ item }) {
   const [login, setLogin] = useState(null);
 
   const agregarFavorito = () => {
+    let elem = [];
     console.log("Agregar favorito");
+    console.log(item);
+    elem.push({
+      id: item.id,
+      imagen: item.imagen,
+      title: item.title,
+      overview: item.overview,
+    })
 
-    //console.log(item);
-    //Imagen: item.imagen
-    //id: item.id
-    //titulo: item.title
-    //desc: item.overview
+    console.log(elem[0])
     //Se debe seleccionar la lista donde se desea agregar la pelicula.
     // Si no hay listas, dar la posibilidad de crearlas.
-  };
+  };  
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {
@@ -86,7 +83,9 @@ export default function MoviesDesc({
       // o puede devolver un objeto con los datos del usuario e indica que el usuario esta logueado
       !user ? setLogin(false) : setLogin(true);
     });
+    console.log(item);
   }, []);
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.imageContainer}>
@@ -115,16 +114,8 @@ export default function MoviesDesc({
         <Text style={styles.infoRecipeName}>{item.title}</Text>
 
         <InfoPeli item={item} />
-        <CommentMovie
-          login={login}
-          userName={userName}
-          emailUser={emailUser}
-        />
-        <ListComments
-          userData={userData}
-          userName={userName}
-          emailUser={emailUser}
-        />
+        <CommentMovie />
+        <ListComments userData={userData} />
       </View>
     </ScrollView>
   );
@@ -167,7 +158,6 @@ const styles = StyleSheet.create({
   infoRecipeContainer: {
     flex: 1,
     margin: 25,
-    //marginTop: 20,
     justifyContent: "center",
     alignItems: "center",
   },

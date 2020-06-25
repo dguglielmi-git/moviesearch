@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   View,
   Text,
@@ -9,43 +9,17 @@ import {
   TouchableHighlight,
   Dimensions,
 } from "react-native";
+import {MyContext} from '../../hoc/MyContext'
 
-// screen sizing
 const { width, height } = Dimensions.get("window");
 // orientation must fixed
 const SCREEN_WIDTH = width < height ? width : height;
-
-export default function TabListaOtros({setLista}) {
+export default function TabListaOtros() {
   const [miLista, setMiLista] = useState([]);
+  const {setLista, listapublica} = useContext(MyContext);
 
-  const listaprivada = [
-    {
-      id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",
-      title: "First Item",
-    },
-    {
-      id: "3ac68afc-c605-48d3-a4f8-fbd91aa27f63",
-      title: "Second Item",
-    },
-    {
-      id: "58694a0f-3da1-471f-bd96-145571e2xd72",
-      title: "Third Item",
-    },
-    {
-      id: "bd7acbea-c1b1-46c2-aed5-3adx3abb28ba",
-      title: "First Item",
-    },
-    {
-      id: "3ac68afc-c605-48d3-a4f8-fbx91aa97f63",
-      title: "Second Item",
-    },
-    {
-      id: "58694a0f-3da1-471f-bd96-105571e29d72",
-      title: "Third Item",
-    },
-  ];
   const cargarLista = async () => {
-    setMiLista(listaprivada);
+    setMiLista(listapublica);
   };
 
   useEffect(() => {
@@ -63,9 +37,17 @@ export default function TabListaOtros({setLista}) {
       style={{ borderRadius: 25 }}
     >
       <View style={styles.container}>
-        <Text style={styles.tituloLista}>Titulo Lista</Text>
-        <Text style={styles.descripcionLista}>Descripción de la lista.</Text>
-      </View>
+          <Image
+            source={require("../../../assets/cine.png")}
+            style={styles.imgCine}
+          />
+          <View>
+            <View>
+              <Text style={styles.tituloLista}>{item.title}</Text>
+            </View>
+            <Text style={styles.descripcionLista}>{item.desc}</Text>
+          </View>
+        </View>
     </TouchableHighlight>
   );
 
@@ -95,6 +77,7 @@ const styles = StyleSheet.create({
   mainContainer: {
     height: "100%",
     alignItems: "center",
+    backgroundColor:'#FCE9D6',
   },
   tituloGeneros: {
     fontWeight: "bold",
@@ -116,6 +99,12 @@ const styles = StyleSheet.create({
     height: 30,
     width: 30,
   },
+  imgCine:{
+    height: 30,
+    width: 30,
+    marginTop:5,
+    marginRight:10,
+  },
   tituloContainer: {
     alignSelf: "center",
     marginBottom: 15,
@@ -130,20 +119,21 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   container: {
-    width: SCREEN_WIDTH - 70,
+    width: SCREEN_WIDTH - 60,
     borderWidth: 0.1,
     borderColor: "#63769C",
     borderRadius: 5,
     marginLeft: 10,
     marginRight: 10,
     marginBottom: 10,
-    height: 90,
+    height: 60,
     padding: 5,
     marginTop: 10,
-    backgroundColor: "#FFC275",
+    backgroundColor: "#F3F4F8",
     shadowColor: "#63769C",
     shadowRadius: 10,
     shadowOffset: { width: 0, height: 2 },
     elevation: 10,
+    flexDirection: "row",
   },
 });

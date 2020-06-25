@@ -15,19 +15,13 @@ import Toast from "react-native-easy-toast";
 import NoLogged from "../../components/NoLogged";
 import Loading from "../../components/Loading";
 
-const {Consumer} = React.createContext();
+const { Consumer } = React.createContext();
 const { width, height } = Dimensions.get("window");
 // orientation must fixed
 const SCREEN_WIDTH = width < height ? width : height;
 
-export default function TabMiLista({
-  userLogin,
-  emailUser,
-  setUserName,
-  setEmailUser,
-}) {
+export default function TabGeneros() {
   const refDropDown = useRef();
-  const itemRef = useRef();
   const toastRef = useRef();
   const toastRefOk = useRef();
   const [valueDropdown, setValueDropdown] = useState("");
@@ -35,7 +29,7 @@ export default function TabMiLista({
   const [listaGeneros, setListaGeneros] = useState([]);
   const onChangeDropDownHandler = (val) => setValueDropdown(val);
   const [login, setLogin] = useState(null);
- 
+
   useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {
       // Puede devolver null = usuario no logueado
@@ -128,11 +122,7 @@ export default function TabMiLista({
         <Text style={styles.tituloGeneros}>
           Configuración de Lista de Generos Favoritos
         </Text>
-        <Consumer>
-          {(context) => {
-            <Text>{context.testProvider} </Text>
-          }}
-        </Consumer>
+    
       </View>
       <View style={styles.Agregar}>
         <View style={{ width: 300 }}>

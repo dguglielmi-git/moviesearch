@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { StyleSheet, View } from "react-native";
 import { Input, Icon, Button } from "react-native-elements";
 import { isEmpty } from "lodash";
@@ -6,20 +6,18 @@ import { validateEmail } from "../../utils/validations";
 import { useNavigation } from "@react-navigation/native";
 import * as firebase from "firebase";
 import Loading from "../Loading";
+import {MyContext} from '../../hoc/MyContext'
 
 export default function LoginForm({
   toastRef,
-  setUserLogin,
-  userLogin,
   callFromMovie,
-  setUserName,
-  setEmailUser,
 }) {
   //const { toastRef , setUserLogin, userLogin} = props;
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState(defaultFormValue());
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
+  const {setUserLogin, setUserName, setEmailUser} = useContext(MyContext);
 
   const onChange = (e, type) => {
     setFormData({
