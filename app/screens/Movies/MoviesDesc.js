@@ -14,6 +14,8 @@ import InfoPeli from "../../components/Movies/InfoPeli";
 import CommentMovie from "../../components/Movies/Comments/CommentMovie";
 import ListComments from "../../components/Movies/Comments/ListComments";
 import { MyContext } from "../../hoc/MyContext";
+import Modal from "../../components/Modal";
+import MoviesListasFavoritas from "../../components/Movies/MovieListasFavoritas";
 
 const { width: viewportWidth } = Dimensions.get("window");
 const userData = [
@@ -61,12 +63,17 @@ const userData = [
 
 export default function MoviesDesc({ item }) {
   const [login, setLogin] = useState(null);
-  const { setComentarios } = useContext(MyContext);
+  const { setComentarios, getPrivateLists, listasPrivadas } = useContext(
+    MyContext
+  );
+  const [isVisible, setIsVisible] = useState(false);
+  const [valueDropdown, setValueDropdown] = useState("");
+  const clickModal = () => setIsVisible(!isVisible);
 
-  const agregarFavorito = () => {
+  const agregarFavorito = async () => {
+    await getPrivateLists();
     let elem = [];
     console.log("Agregar favorito");
-    console.log(item);
     elem.push({
       id: item.id,
       imagen: item.imagen,
@@ -75,6 +82,7 @@ export default function MoviesDesc({ item }) {
     });
 
     console.log(elem[0]);
+    clickModal();
     //Se debe seleccionar la lista donde se desea agregar la pelicula.
     // Si no hay listas, dar la posibilidad de crearlas.
   };
@@ -101,7 +109,7 @@ export default function MoviesDesc({ item }) {
       </View>
 
       <View style={styles.agregarFavoritos}>
-        <Text style={styles.textFavoritos} onPress={agregarFavorito}>
+        <Text style={styles.textFavoritos} onPress={() => agregarFavorito()}>
           Agregar a Favoritos
         </Text>
         <TouchableHighlight underlayColor="white" onPress={agregarFavorito}>
@@ -121,6 +129,15 @@ export default function MoviesDesc({ item }) {
         <CommentMovie item={item} />
         <ListComments item={item} />
       </View>
+
+      <Modal isVisible={isVisible}>
+        <MoviesListasFavoritas
+          setIsVisible={setIsVisible}
+          listasPrivadas={listasPrivadas}
+          valueDropdown={valueDropdown}
+          setValueDropdown={setValueDropdown}
+        />
+      </Modal>
     </ScrollView>
   );
 }

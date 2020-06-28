@@ -7,31 +7,26 @@ import {
   Image,
   FlatList,
 } from "react-native";
-import {
-  Container,
-  Content,
-  List,
-  ListItem,
-  Thumbnail,
-  Left,
-  Body,
-  Right,
-  Button,
-} from "native-base";
 import { Divider } from "react-native-elements";
 import { MyContext } from "../../hoc/MyContext";
 import ToggleSwitch from "toggle-switch-react-native";
 import { useNavigation } from "@react-navigation/native";
+import { Container, Content, Button } from "native-base";
 import { getMovieByID } from "../../controller/controllerApi";
-import { size } from "lodash";
 
 export default function ListaPeliculas() {
   const [domainList, setDomainList] = useState(false);
-  const { setItem, idListaSel, changeDomainList, listasPrivadas } = useContext(
-    MyContext
-  );
+  const {
+    setItem,
+    idListaSel,
+    changeDomainList,
+    listasPrivadas,
+    deleteMovieList,
+    getPrivateLists,
+  } = useContext(MyContext);
   const [listado, setListado] = useState([]);
   const [descLista, setDescLista] = useState("");
+  const [updateListaPeliculas, setUpdateListaPeliculas] = useState(false);
 
   const toggleDomain = () => {
     setDomainList(!domainList);
@@ -41,7 +36,8 @@ export default function ListaPeliculas() {
 
   const labelDomain = () => (domainList ? "Lista Pública" : "Lista Privada");
 
-  const cargarPeliculas = () => {
+  const cargarPeliculas = async() => {
+    await getPrivateLists();
     setListado([]);
     const aux = [];
     listasPrivadas.forEach((l) => {
@@ -55,7 +51,12 @@ export default function ListaPeliculas() {
 
   useEffect(() => {
     cargarPeliculas();
-  }, []);
+    if (updateListaPeliculas) {
+      console.log("Se ejecuta la actualizacion");
+      cargarPeliculas();
+      setUpdateListaPeliculas(false);
+    }
+  }, [updateListaPeliculas]);
 
   return (
     <Container>
@@ -82,7 +83,13 @@ export default function ListaPeliculas() {
           numColumns={1}
           data={listado}
           renderItem={(datos) => (
-            <ListadoPeliculas datos={datos} setItem={setItem} />
+            <ListadoPeliculas
+              datos={datos}
+              setItem={setItem}
+              deleteMovieList={deleteMovieList}
+              listado={listado}
+              setUpdateListaPeliculas={setUpdateListaPeliculas}
+            />
           )}
           keyExtractor={(item, index) => index.toString()}
         />
@@ -92,8 +99,14 @@ export default function ListaPeliculas() {
 }
 
 function ListadoPeliculas(props) {
-  const { datos, setItem } = props;
-  const { id, imagen, overview, title } = datos.item;
+  const {
+    datos,
+    setItem,
+    deleteMovieList,
+    listado,
+    setUpdateListaPeliculas,
+  } = props;
+  const { id, imagen, overview, title, items } = datos.item;
   const navigation = useNavigation();
   /**
    * Recupera los datos de la pelicula con su ID y
@@ -106,9 +119,24 @@ function ListadoPeliculas(props) {
     navigation.navigate("moviesdesc");
   };
 
-  const removeMovie = (id_) => {
-    console.log("Eliminar id: " + id_ + " Perteneciente a lista: ");
+  const removeMovie = (idMovie) => {
+    //deleteMovieList(idMovie);
+    const aux = listado;
+    const newArray = [];
+
+    aux.map((lis) => {
+      if (lis.id !== idMovie) {
+        newArray.push(lis);
+      }
+    });
+    deleteMovieList(newArray);
+    console.log("Eliminada la pelicula");
+    setUpdateListaPeliculas(true);
   };
+
+  useEffect(() => {
+    console.log("Items: " + items);
+  }, []);
 
   return (
     <View>

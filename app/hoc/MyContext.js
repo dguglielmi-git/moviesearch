@@ -642,11 +642,6 @@ const MyContextProvider = (props) => {
           resPL.push(listas);
         });
         setListasPrivadas(resPL);
-
-        //Imprime listas recuperadas
-        /* resPL.forEach((t) => {
-          console.log(t);
-        });*/
       });
   };
 
@@ -718,11 +713,16 @@ const MyContextProvider = (props) => {
 
   // Cambia el dominio de una lista de Publica a Privada
   const changeDomainList = (idlista_, newDomain) => {
-    console.log(
-      "Actualizando id: " + idlista_ + " - Nuevo Dominio:" + newDomain
-    );
     db.collection("listas").doc(idlista_).update({
       privado: newDomain,
+    });
+  };
+
+  const deleteMovieList = (newArray) => {
+    console.log("Buscando lista: " + idListaSel);
+    //Pisamos el array "items" con el nuevo array
+    db.collection("listas").doc(idListaSel).update({
+      items: newArray,
     });
   };
 
@@ -840,6 +840,7 @@ const MyContextProvider = (props) => {
         listasPrivadas,
         setListasPrivadas,
         getPrivateLists,
+        deleteMovieList,
       }}
     >
       {props.children}
