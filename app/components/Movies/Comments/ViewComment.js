@@ -1,12 +1,49 @@
-import React from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { Avatar, Icon } from "react-native-elements";
+import React, { useEffect } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  ActivityIndicator,
+  Image,
+} from "react-native";
+import { size } from "lodash";
+import { Icon } from "react-native-elements";
 
-export default function ViewComment({ userData, userName, emailUser }) {
+export default function ViewComment(props) {
+  const { comentarios, sinComentario } = props;
+
+  return (
+    <View>
+      {size(comentarios) > 0 ? (
+        <FlatList
+          data={comentarios}
+          renderItem={(datos) => <Comentario datos={datos} />}
+          keyExtractor={(item, index) => index.toString()}
+        />
+      ) : !sinComentario ? (
+        <View>
+          <ActivityIndicator size="large" hidesWhenStopped={true} />
+        </View>
+      ) : (
+        <View style={{ alignItems: "center" }}>
+          <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+            - No hay comentarios de los usuarios -
+          </Text>
+        </View>
+      )}
+    </View>
+  );
+}
+
+function Comentario(props) {
+  const { datos, sinComentario } = props;
+  const { comentario, votacion, nombre, fechavoto, imagen } = datos.item;
+
   const starCant = (cant) => {
     var payment = [];
 
-    //userName = utilizado para detectar si un comentario es del propio usuario
+    // userName = utilizado para detectar si un comentario es del propio usuario
     // debe aparecer la opcion de eliminar comentario.
     for (let i = 0; i < cant; i++) {
       payment.push(
@@ -18,27 +55,29 @@ export default function ViewComment({ userData, userName, emailUser }) {
         />
       );
     }
+
     return payment;
   };
 
   return (
     <View>
       <View style={styles.vistaComentarios}>
-        <Avatar
-          rounded
-          source={{
-            uri: userData.uri,
-          }}
-          size="medium"
+        <Image
+          source={{ uri: imagen }}
+          style={{ height: 60, width: 60, borderRadius: 50 }}
         />
         <View>
-          <View style={styles.innerContainer}>{starCant(userData.vote)}</View>
-          <Text style={styles.infoUser}>{userData.nombre}</Text>
-          <Text style={styles.infoDate}>{userData.fechaVoto}</Text>
+          <View style={styles.innerContainer}>{starCant(votacion)}</View>
+          <Text style={styles.infoUser}>{nombre}</Text>
+          <Text style={styles.infoDate}>
+            {fechavoto
+              ? new Date(fechavoto.toDate()).toString().substring(0, 25)
+              : "--/--/----"}
+          </Text>
         </View>
       </View>
       <View style={styles.textoComentario}>
-        <Text>{userData.textoComentario}</Text>
+        <Text>{comentario}</Text>
       </View>
     </View>
   );

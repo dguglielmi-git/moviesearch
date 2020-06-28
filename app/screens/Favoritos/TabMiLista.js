@@ -6,14 +6,14 @@ import {
   StyleSheet,
   Image,
   FlatList,
+  ActivityIndicator,
   TouchableHighlight,
   Dimensions,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import NoLogged from "../../components/NoLogged";
 import Loading from "../../components/Loading";
 import { MyContext } from "../../hoc/MyContext";
-import { Divider } from "react-native-elements";
+import NoLogged from "../../components/NoLogged";
+import { useNavigation } from "@react-navigation/native";
 
 const { width, height } = Dimensions.get("window");
 // orientation must fixed
@@ -23,16 +23,19 @@ export default function TabMiLista() {
   const [miLista, setMiLista] = useState([]);
   const navigation = useNavigation();
   const [login, setLogin] = useState(null);
+  const [user, setUser] = useState([]);
   const {
     setLista,
     listaprivada,
     setIdListaSel,
     getNamesSelectedList,
     findIdByName,
+    listasPrivadas,
+    getPrivateLists,
   } = useContext(MyContext);
 
   const cargarLista = async () => {
-    setMiLista(listaprivada);
+    //setMiLista(listaprivada);
   };
 
   useEffect(() => {
@@ -40,8 +43,10 @@ export default function TabMiLista() {
       // Puede devolver null = usuario no logueado
       // o puede devolver un objeto con los datos del usuario e indica que el usuario esta logueado
       !user ? setLogin(false) : setLogin(true);
+      user && setUser(user);
     });
-    cargarLista();
+    //cargarLista();
+    getPrivateLists();
   }, []);
 
   const findById = (id) => {
@@ -65,6 +70,7 @@ export default function TabMiLista() {
   };
 
   const agregarList = () => {};
+
   /**
    * Renderizado de los boxes de Listas Privadas a visualizar
    */
@@ -99,6 +105,7 @@ export default function TabMiLista() {
       </TouchableHighlight>
     </View>
   );
+
   if (login === null) return <Loading isVisible={true} text="Cargando..." />;
 
   return !login ? (
@@ -121,14 +128,64 @@ export default function TabMiLista() {
         </TouchableHighlight>
       </View>
 
-      <FlatList
-        vertical
-        showsVerticalScrollIndicator={false}
-        numColumns={1}
-        data={listaprivada}
-        renderItem={renderLista}
-        keyExtractor={(item_) => `${item_.id}`}
-      />
+      {listasPrivadas ? (
+        <FlatList
+          vertical
+          showsVerticalScrollIndicator={false}
+          numColumns={1}
+          data={listasPrivadas}
+          renderItem={(datos) => (
+            <ListaPrivada datos={datos} setIdListaSel={setIdListaSel} />
+          )}
+          keyExtractor={(item, index) => index.toString()}
+        />
+      ) : (
+        <View>
+          <ActivityIndicator size="large" />
+        </View>
+      )}
+    </View>
+  );
+}
+
+function ListaPrivada(props) {
+  const { datos, setIdListaSel } = props;
+  const { desc, id, items, privado, title, usuario } = datos.item;
+  const navigation = useNavigation();
+  const onPressLista = (id) => {
+    setIdListaSel(id);
+    navigation.navigate("showList");
+  };
+
+  return (
+    <View style={{ flexDirection: "row" }}>
+      <TouchableHighlight
+        underlayColor="rgba(204,204,204,0.02)"
+        onPress={(items) => onPressLista(id)}
+        style={{ borderRadius: 25 }}
+      >
+        <View style={styles.container}>
+          <Image
+            source={require("../../../assets/cine.png")}
+            style={styles.imgCine}
+          />
+          <View>
+            <View>
+              <Text style={styles.tituloLista}>{title}</Text>
+            </View>
+            <Text style={styles.descripcionLista}>{desc}</Text>
+          </View>
+        </View>
+      </TouchableHighlight>
+      <TouchableHighlight
+        underlayColor="rgba(204,204,204,0.02)"
+        style={{ borderRadius: 25 }}
+      >
+        <Image
+          source={require("../../../assets/eliminar.png")}
+          style={styles.quitarIcon}
+        />
+      </TouchableHighlight>
     </View>
   );
 }
@@ -160,11 +217,11 @@ const styles = StyleSheet.create({
     marginRight: 10,
     marginTop: 10,
   },
-  imgCine:{
+  imgCine: {
     height: 30,
     width: 30,
-    marginTop:5,
-    marginRight:10,
+    marginTop: 5,
+    marginRight: 10,
   },
   imgBotonAgregar: {
     height: 30,

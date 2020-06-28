@@ -1,25 +1,54 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useRef, useEffect } from "react";
+import * as firebase from "firebase";
+import Toast from "react-native-easy-toast";
 import { Button as Boton } from "native-base";
+import { MyContext } from "../../../hoc/MyContext";
+import { useNavigation } from "@react-navigation/native";
 import { AirbnbRating, Button } from "react-native-elements";
 import { View, StyleSheet, TextInput, Text } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import {MyContext} from '../../../hoc/MyContext'
 
-export default function Commentmovie() {
+
+export default function Commentmovie({ item }) {
   const [puntaje, setPuntaje] = useState(0);
   const [comment, setComment] = useState("");
   const navigation = useNavigation();
-  const {checkLogin } = useContext(MyContext);
+  const textoCom = useRef();
+  const toastRefOk = useRef();
+  const {
+    checkLogin,
+    addComentario,
+    resInsert,
+    setResInsert,
+    getComentario,
+  } = useContext(MyContext);
 
   const ratingCompleted = (rating) => setPuntaje(rating);
 
-  const sendComment = () => {
-    // userName: 'Daniel Guglielmi
-    // mail: setEmailUser
-    // fecha: funcion
-    // vote: puntaje
-    // Utilizar esta estructura para impactar los datos en la base
-    // Luego de la llamada a esta funcion se deberian re-renderizar los comentarios
+  useEffect(() => {
+    if (resInsert) {
+      toastRefOk.current.show(
+        "El comentario se ha ingresado correctamente",
+        3000
+      );
+      textoCom.current.clear();
+      setResInsert(false);
+      getComentario(item.id);
+    }
+  }, [resInsert]);
+
+  const _sendComment = async () => {
+    const user = await firebase.auth().currentUser;
+    if (comment !== "") {
+      const res = await addComentario(
+        item.id,
+        user.uid,
+        user.displayName,
+        comment,
+        user.photoURL,
+        user.email,
+        puntaje === 0 ? 3 : puntaje
+      );
+    }
   };
 
   const onChangeTxt = (e) => setComment(e);
@@ -44,6 +73,7 @@ export default function Commentmovie() {
           style={styles.input}
           multiline={true}
           onChangeText={(e) => onChangeTxt(e)}
+          ref={textoCom}
         />
       </View>
       <View style={styles.sendComment}>
@@ -58,10 +88,16 @@ export default function Commentmovie() {
           <Button
             title="Comentar"
             buttonStyle={styles.btnStyle}
-            onPress={sendComment}
+            onPress={() => _sendComment()}
           />
         )}
       </View>
+      <Toast
+        ref={toastRefOk}
+        position="center"
+        opacity={0.9}
+        style={styles.toastOk}
+      />
     </View>
   );
 }
@@ -100,5 +136,8 @@ const styles = StyleSheet.create({
   sendComment: {
     flexDirection: "row",
     justifyContent: "space-around",
+  },
+  toastOk: {
+    backgroundColor: "#483076",
   },
 });

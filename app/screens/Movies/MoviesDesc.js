@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import * as firebase from "firebase";
 import {
   ScrollView,
@@ -13,6 +13,7 @@ import { Icon } from "react-native-elements";
 import InfoPeli from "../../components/Movies/InfoPeli";
 import CommentMovie from "../../components/Movies/Comments/CommentMovie";
 import ListComments from "../../components/Movies/Comments/ListComments";
+import { MyContext } from "../../hoc/MyContext";
 
 const { width: viewportWidth } = Dimensions.get("window");
 const userData = [
@@ -60,6 +61,7 @@ const userData = [
 
 export default function MoviesDesc({ item }) {
   const [login, setLogin] = useState(null);
+  const { setComentarios } = useContext(MyContext);
 
   const agregarFavorito = () => {
     let elem = [];
@@ -70,20 +72,22 @@ export default function MoviesDesc({ item }) {
       imagen: item.imagen,
       title: item.title,
       overview: item.overview,
-    })
+    });
 
-    console.log(elem[0])
+    console.log(elem[0]);
     //Se debe seleccionar la lista donde se desea agregar la pelicula.
     // Si no hay listas, dar la posibilidad de crearlas.
-  };  
+  };
 
   useEffect(() => {
+    setComentarios([]);
     firebase.auth().onAuthStateChanged((user) => {
       // Puede devolver null = usuario no logueado
       // o puede devolver un objeto con los datos del usuario e indica que el usuario esta logueado
       !user ? setLogin(false) : setLogin(true);
     });
-    console.log(item);
+
+    // console.log(item);
   }, []);
 
   return (
@@ -114,8 +118,8 @@ export default function MoviesDesc({ item }) {
         <Text style={styles.infoRecipeName}>{item.title}</Text>
 
         <InfoPeli item={item} />
-        <CommentMovie />
-        <ListComments userData={userData} />
+        <CommentMovie item={item} />
+        <ListComments item={item} />
       </View>
     </ScrollView>
   );

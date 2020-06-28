@@ -1,16 +1,16 @@
 import React, { useState, useContext } from "react";
-import { createStackNavigator } from "@react-navigation/stack";
+import { MyContext } from "../hoc/MyContext";
+import Login from "../screens/Account/Login";
 import Movies from "../screens/Movies/Movies";
 import MoviesDesc from "../screens/Movies/MoviesDesc";
-import Login from "../screens/Account/Login";
-import {MyContext} from '../hoc/MyContext'
+import { createStackNavigator } from "@react-navigation/stack";
 
 const Stack = createStackNavigator();
 
 export default function MovieStack() {
   const [item, setItem] = useState([]);
-  const {userLogin} = useContext(MyContext);
-  
+  const { userLogin } = useContext(MyContext);
+
   return (
     <Stack.Navigator>
       <Stack.Screen name="movies" options={{ title: "Movies" }}>

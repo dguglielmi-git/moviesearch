@@ -4,7 +4,6 @@ import {
   Text,
   StyleSheet,
   Image,
-  SafeAreaView,
   FlatList,
   TouchableHighlight,
   Dimensions,
@@ -14,6 +13,7 @@ import {MyContext} from '../../hoc/MyContext'
 const { width, height } = Dimensions.get("window");
 // orientation must fixed
 const SCREEN_WIDTH = width < height ? width : height;
+
 export default function TabListaOtros() {
   const [miLista, setMiLista] = useState([]);
   const {setLista, listapublica} = useContext(MyContext);
@@ -117,6 +117,8 @@ const styles = StyleSheet.create({
   },
   descripcionLista: {
     fontSize: 15,
+    width:300,
+    height:20,
   },
   container: {
     width: SCREEN_WIDTH - 60,

@@ -1,24 +1,35 @@
-import React, { useState, useContext } from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { Icon } from "react-native-elements";
+import React, { useEffect, useState, useContext } from "react";
 import ViewComment from "./ViewComment";
-import {MyContext} from '../../../hoc/MyContext'
+import * as firebase from "firebase";
+import { Icon } from "react-native-elements";
+import { View, StyleSheet } from "react-native";
+import { MyContext } from "../../../hoc/MyContext";
+import { firebaseApp } from "../../../utils/firebase";
 
-export default function ListComments({ userData}) {
+const db = firebase.firestore(firebaseApp);
+
+export default function ListComments({ item }) {
   const [posHand, setPosHand] = useState("");
-  const {emailUser, userName} = useContext(MyContext);
+  const { comentarios, sinComentario, getComentario } = useContext(MyContext);
   
-  const clickHand = () => setPosHand("flexDirection: 'row', justifyContent: 'flex-start', marginTop: 20");
-  const unClickHand = () => setPosHand("flexDirection: 'row', justifyContent: 'flex-start', marginTop: 20");
+  useEffect(() => {
+    getComentario(item.id);
+  }, []);
+
+  const clickHand = () =>
+    setPosHand(
+      "flexDirection: 'row', justifyContent: 'flex-start', marginTop: 20"
+    );
+  const unClickHand = () =>
+    setPosHand(
+      "flexDirection: 'row', justifyContent: 'flex-start', marginTop: 20"
+    );
+
   return (
     <View style={styles.containerComentarios}>
-      {userData.map((user) => (
-        <ViewComment userData={user} userName={userName} emailUser={emailUser} />
-      ))}
+      <ViewComment comentarios={comentarios} sinComentario={sinComentario} />
       <View style={styles.textoComentario}>
-        <View
-          style={posHand}
-        >
+        <View style={posHand}>
           <Icon
             type="material-community"
             name="hand-right"
@@ -37,7 +48,7 @@ const styles = StyleSheet.create({
     flex: 1,
     width: "100%",
     borderTopWidth: 0.7,
-    borderTopColor: "#7CB1D7"
+    borderTopColor: "#7CB1D7",
   },
   textoComentario: {
     marginTop: 10,

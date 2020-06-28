@@ -10,9 +10,9 @@ import {
 } from "react-native";
 import Modal from "../../components/Modal";
 import { Item, Input } from "native-base";
+import FiltersSearching from "./FiltersSearching";
 import { Icon, Divider } from "react-native-elements";
 import { useNavigation } from "@react-navigation/native";
-import FiltersSearching from "./FiltersSearching";
 import { getEstrenos, getMovie } from "../../controller/controllerApi";
 
 export default function Movies({item, setItem, userLogin}) {
