@@ -27,8 +27,8 @@ export default function ViewComment(props) {
         </View>
       ) : (
         <View style={{ alignItems: "center" }}>
-          <Text style={{ fontSize: 18, fontWeight: "bold" }}>
-            - No hay comentarios de los usuarios -
+          <Text style={{ fontSize: 16, fontWeight: "bold" }}>
+            - Nadie ha comentado sobre esta película -
           </Text>
         </View>
       )}

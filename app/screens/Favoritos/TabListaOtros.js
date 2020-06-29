@@ -9,25 +9,23 @@ import {
   Dimensions,
 } from "react-native";
 import {MyContext} from '../../hoc/MyContext'
+import { useNavigation } from "@react-navigation/native";
 
 const { width, height } = Dimensions.get("window");
 // orientation must fixed
 const SCREEN_WIDTH = width < height ? width : height;
 
 export default function TabListaOtros() {
-  const [miLista, setMiLista] = useState([]);
-  const {setLista, listapublica} = useContext(MyContext);
-
-  const cargarLista = async () => {
-    setMiLista(listapublica);
-  };
+  const {setLista, listasPublicas, setIdListaSel, getPublicLists} = useContext(MyContext);
+  const navigation = useNavigation();
 
   useEffect(() => {
-    cargarLista();
+    getPublicLists();
   }, []);
 
   const onPressLista = (item) => {
-    console.log("Click Press Lista");
+    setIdListaSel(item.id);
+    navigation.navigate("showPublicList");
   };
 
   const renderLista = ({ item }) => (
@@ -65,7 +63,7 @@ export default function TabListaOtros() {
         vertical
         showsVerticalScrollIndicator={false}
         numColumns={1}
-        data={miLista}
+        data={listasPublicas}
         renderItem={renderLista}
         keyExtractor={(item) => `${item.id}`}
       />

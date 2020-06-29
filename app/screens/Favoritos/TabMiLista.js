@@ -26,17 +26,10 @@ export default function TabMiLista() {
   const [user, setUser] = useState([]);
   const {
     setLista,
-    listaprivada,
     setIdListaSel,
-    getNamesSelectedList,
-    findIdByName,
     listasPrivadas,
     getPrivateLists,
   } = useContext(MyContext);
-
-  const cargarLista = async () => {
-    //setMiLista(listaprivada);
-  };
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {
@@ -45,7 +38,6 @@ export default function TabMiLista() {
       !user ? setLogin(false) : setLogin(true);
       user && setUser(user);
     });
-    //cargarLista();
     getPrivateLists();
   }, []);
 
@@ -152,11 +144,14 @@ function ListaPrivada(props) {
   const { datos, setIdListaSel } = props;
   const { desc, id, items, privado, title, usuario } = datos.item;
   const navigation = useNavigation();
+  
   const onPressLista = (id) => {
+    console.log(id)
     setIdListaSel(id);
     navigation.navigate("showList");
   };
 
+  
   return (
     <View style={{ flexDirection: "row" }}>
       <TouchableHighlight

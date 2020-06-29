@@ -21,6 +21,8 @@ const MyContextProvider = (props) => {
   const [idListaSel, setIdListaSel] = useState("");
   //---- nuevas modificaciones
   const [listasPrivadas, setListasPrivadas] = useState([]);
+  const [listasPublicas, setListasPublicas] = useState([]);
+  const [privateLists, setPrivateLists] = useState([]);
 
   // Comentarios
   const [comentarios, setComentarios] = useState([]);
@@ -625,12 +627,27 @@ const MyContextProvider = (props) => {
     },
   ];
 
+  const getPublicLists = async () => {
+    const resPL = [];
+
+    db.collection("listas")
+      .where("privado", "==", false)
+      .get()
+      .then((response) => {
+        response.forEach((doc) => {
+          const listas = doc.data();
+          listas.id = doc.id;
+          resPL.push(listas);
+        });
+        setListasPublicas(resPL);
+      });
+  };
+
   // Trae Listas
   const getPrivateLists = async () => {
     const user = await firebase.auth().currentUser;
     const userid = user.uid;
     const resPL = [];
-    console.log("userid logueado: " + userid);
 
     db.collection("listas")
       .where("usuario", "==", userid)
@@ -645,6 +662,22 @@ const MyContextProvider = (props) => {
       });
   };
 
+  const getPrivateListsByID = async (id__) => {
+    const resPL = [];
+
+    db.collection("listas")
+      .doc(id__)
+      .get()
+      .then((response) => {
+        response.forEach((doc) => {
+          const listas = doc.data();
+          listas.id = doc.id;
+          resPL.push(listas);
+        });
+        setPrivateLists(resPL);
+      });
+  };
+
   //version final
   const getComentario = (id_) => {
     const resCC = [];
@@ -653,9 +686,7 @@ const MyContextProvider = (props) => {
       .where("id_pelicula", "==", id_)
       .get()
       .then((response) => {
-        //  console.log(response);
         response.forEach((doc) => {
-          //console.log("****Datos:" + doc.data());
           const comments = doc.data(); //  .data() : Nos entrega solamente el objeto con los datos de firestore
           comments.id = doc.id; //  .id     : Nos devuelve el id autogenerado del comentario
           resCC.push(comments);
@@ -667,6 +698,16 @@ const MyContextProvider = (props) => {
       });
   };
 
+  const newList = (nameNewList) => {
+    db.collection("listas")
+      .add(nameNewList)
+      .then(() => {
+        console.log("Ok");
+      })
+      .catch(() => {
+        console.log("Error al insertar comentario.");
+      });
+  };
   //
   const createLists = () => {
     listapublica2.map((m) => {
@@ -726,6 +767,23 @@ const MyContextProvider = (props) => {
     });
   };
 
+  const addNewMovieToList = (newMovie, idListaElegida) => {
+    let aux = [];
+    let newA = [];
+
+    db.collection("listas")
+      .doc(idListaElegida)
+      .get()
+      .then((response) => {
+        aux = response.data();
+        newA = aux.items;
+        newA.push(newMovie);
+        db.collection("listas").doc(idListaElegida).update({
+          items: newA,
+        });
+      });
+  };
+
   const getDomainList = () => {
     let result = false;
     listaprivada.map((m) => {
@@ -769,10 +827,6 @@ const MyContextProvider = (props) => {
     setUserLogin(false);
   };
 
-  // funcion de insertar comentario
-
-  // funcion de eliminar comentario
-
   // Chequea si existe un ID de Pelicula en una Lista privada
   const checkExists = (idlistapriv, idPeli) => {
     let resul = false;
@@ -801,9 +855,6 @@ const MyContextProvider = (props) => {
       });
     }
   };
-  // funcion de quitar de lista de favoritos
-
-  // actualizar lista publica o privada
 
   return (
     <MyContext.Provider
@@ -841,6 +892,13 @@ const MyContextProvider = (props) => {
         setListasPrivadas,
         getPrivateLists,
         deleteMovieList,
+        addNewMovieToList,
+        getPrivateListsByID,
+        privateLists,
+        newList,
+        listasPublicas,
+        setListasPublicas,
+        getPublicLists,
       }}
     >
       {props.children}

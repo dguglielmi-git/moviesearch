@@ -9,42 +9,25 @@ import {
 } from "react-native";
 import { Divider } from "react-native-elements";
 import { MyContext } from "../../hoc/MyContext";
-import ToggleSwitch from "toggle-switch-react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Container, Content, Button } from "native-base";
 import { getMovieByID } from "../../controller/controllerApi";
 
-export default function ListaPeliculas() {
-  const [domainList, setDomainList] = useState(false);
-  const {
-    setItem,
-    idListaSel,
-    changeDomainList,
-    listasPrivadas,
-    deleteMovieList,
-    getPrivateLists,
-  } = useContext(MyContext);
+export default function ListaPeliculasPublicas() {
+  const { setItem, idListaSel, listasPublicas, deleteMovieList, getPublicLists } = useContext(
+    MyContext
+  );
   const [listado, setListado] = useState([]);
   const [descLista, setDescLista] = useState("");
   const [updateListaPeliculas, setUpdateListaPeliculas] = useState(false);
 
-  const toggleDomain = () => {
-    setDomainList(!domainList);
-    let id = idListaSel;
-    changeDomainList(id, domainList);
-  };
-
-  const labelDomain = () => (domainList ? "Lista Pública" : "Lista Privada");
-
-  const cargarPeliculas = async() => {
-    await getPrivateLists();
+  const cargarPeliculas = async () => {
+    await getPublicLists();
     setListado([]);
-    listasPrivadas.forEach((l) => {
+    listasPublicas.forEach((l) => {
       if (l.id === idListaSel) {
         setListado(l.items);
         setDescLista(l.desc);
-        setDomainList(!l.privado);
-        console.log('l.privado: ' +l.privado)
       }
     });
   };
@@ -61,19 +44,9 @@ export default function ListaPeliculas() {
   return (
     <Container>
       <View style={styles.viewContainer}>
-        <Text style={styles.tituloContainer}>Lista </Text>
+        <Text style={styles.tituloContainer}>Listas Públicas </Text>
         <Text style={styles.mensajeDomain}>{descLista}</Text>
-        <View style={styles.switchStyle}>
-          <ToggleSwitch
-            isOn={domainList}
-            onColor="green"
-            offColor="gray"
-            label={labelDomain()}
-            labelStyle={styles.switchLabelStyle}
-            size="medium"
-            onToggle={() => toggleDomain()}
-          />
-        </View>
+
         <Divider style={{ backgroundColor: "black", marginBottom: 10 }} />
       </View>
       <Content styles={styles.contentStyle}>
@@ -102,11 +75,8 @@ function ListadoPeliculas(props) {
   const {
     datos,
     setItem,
-    deleteMovieList,
-    listado,
-    setUpdateListaPeliculas,
   } = props;
-  const { id, imagen, overview, title, items } = datos.item;
+  const { id, imagen, overview, title } = datos.item;
   const navigation = useNavigation();
   /**
    * Recupera los datos de la pelicula con su ID y
@@ -119,24 +89,6 @@ function ListadoPeliculas(props) {
     navigation.navigate("moviesdesc");
   };
 
-  const removeMovie = (idMovie) => {
-    const aux = listado;
-    const newArray = [];
-
-    aux.map((lis) => {
-      if (lis.id !== idMovie) {
-        newArray.push(lis);
-      }
-    });
-    deleteMovieList(newArray);
-    console.log("Eliminada la pelicula");
-    setUpdateListaPeliculas(true);
-  };
-
-  useEffect(() => {
-    console.log("Items: " + items);
-  }, []);
-
   return (
     <View>
       <TouchableHighlight underlayColor="white" onPress={() => showMovie(id)}>
@@ -145,19 +97,13 @@ function ListadoPeliculas(props) {
             <Image style={styles.imagenPelicula} source={{ uri: imagen }} />
           </View>
           <View style={styles.titleContainer}>
-            <Text note numberOfLines={2} style={styles.titleMovie}>{title}</Text>
+            <Text note numberOfLines={2} style={styles.titleMovie}>
+              {title}
+            </Text>
 
             <Text note numberOfLines={3} style={styles.overview}>
               {overview}
             </Text>
-          </View>
-          <View>
-            <Button transparent onPress={() => removeMovie(id)}>
-              <Image
-                source={require("../../../assets/eliminar.png")}
-                style={styles.quitarIcon}
-              />
-            </Button>
           </View>
         </View>
       </TouchableHighlight>
@@ -179,10 +125,6 @@ const styles = StyleSheet.create({
     fontStyle: "italic",
     color: "blue",
   },
-  switchStyle: {
-    alignItems: "flex-end",
-    marginBottom: 20,
-  },
   switchLabelStyle: {
     color: "black",
     fontWeight: "900",
@@ -201,7 +143,7 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     fontSize: 16,
     fontWeight: "bold",
-    width:260,
+    width: 270,
   },
   imagenPelicula: {
     height: 80,
@@ -210,7 +152,7 @@ const styles = StyleSheet.create({
     marginLeft: 5,
   },
   overview: {
-    width: 260,
+    width: 270,
     marginRight: 10,
     marginLeft: 5,
   },

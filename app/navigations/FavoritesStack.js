@@ -4,6 +4,7 @@ import MoviesDesc from "../screens/Movies/MoviesDesc";
 import Favorites from "../screens/Favoritos/Favorites";
 import { createStackNavigator } from "@react-navigation/stack";
 import ListaPeliculas from "../screens/Favoritos/ListaPeliculas";
+import ListaPeliculasPublicas from "../screens/Favoritos/ListaPeliculasPublicas";
 
 const Stack = createStackNavigator();
 
@@ -21,6 +22,12 @@ export default function FavoritesStack() {
         name="showList"
         options={{ title: "Detalle de Lista" }}
         component={ListaPeliculas}
+      />
+
+      <Stack.Screen
+        name="showPublicList"
+        options={{ title: "Detalle de Lista" }}
+        component={ListaPeliculasPublicas}
       />
 
       <Stack.Screen

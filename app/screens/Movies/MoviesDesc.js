@@ -1,20 +1,20 @@
 import React, { useState, useEffect, useContext } from "react";
 import * as firebase from "firebase";
 import {
-  ScrollView,
   Text,
   View,
-  StyleSheet,
   Image,
+  ScrollView,
+  StyleSheet,
   Dimensions,
   TouchableHighlight,
 } from "react-native";
+import Modal from "../../components/Modal";
 import { Icon } from "react-native-elements";
+import { MyContext } from "../../hoc/MyContext";
 import InfoPeli from "../../components/Movies/InfoPeli";
 import CommentMovie from "../../components/Movies/Comments/CommentMovie";
 import ListComments from "../../components/Movies/Comments/ListComments";
-import { MyContext } from "../../hoc/MyContext";
-import Modal from "../../components/Modal";
 import MoviesListasFavoritas from "../../components/Movies/MovieListasFavoritas";
 
 const { width: viewportWidth } = Dimensions.get("window");
@@ -63,39 +63,51 @@ const userData = [
 
 export default function MoviesDesc({ item }) {
   const [login, setLogin] = useState(null);
-  const { setComentarios, getPrivateLists, listasPrivadas } = useContext(
-    MyContext
-  );
+  const {
+    setComentarios,
+    getPrivateLists,
+    listasPrivadas,
+    privateLists,
+    addNewMovieToList,
+    getPrivateListsByID,
+    newList,
+    userName,
+  } = useContext(MyContext);
   const [isVisible, setIsVisible] = useState(false);
   const [valueDropdown, setValueDropdown] = useState("");
+  const [listado, setListado] = useState([]);
   const clickModal = () => setIsVisible(!isVisible);
 
-  const agregarFavorito = async () => {
-    await getPrivateLists();
-    let elem = [];
-    console.log("Agregar favorito");
-    elem.push({
-      id: item.id,
-      imagen: item.imagen,
-      title: item.title,
-      overview: item.overview,
-    });
+  const agregarOK = async (idLista) => {
+    console.log("ID recibido:" + idLista);
 
-    console.log(elem[0]);
+    addNewMovieToList(
+      {
+        id: item.id,
+        imagen: item.imagen,
+        overview: item.overview,
+        title: item.title,
+      },
+      idLista
+    );
+  };
+
+  const agregarFavorito = async () => {
+    setValueDropdown([]);
+    await getPrivateLists();
     clickModal();
-    //Se debe seleccionar la lista donde se desea agregar la pelicula.
-    // Si no hay listas, dar la posibilidad de crearlas.
   };
 
   useEffect(() => {
     setComentarios([]);
     firebase.auth().onAuthStateChanged((user) => {
-      // Puede devolver null = usuario no logueado
-      // o puede devolver un objeto con los datos del usuario e indica que el usuario esta logueado
+      /**
+       *  Puede devolver null = usuario no logueado
+       *  o puede devolver un objeto con los datos del
+       *  usuario e indica que el usuario esta logueado
+       */
       !user ? setLogin(false) : setLogin(true);
     });
-
-    // console.log(item);
   }, []);
 
   return (
@@ -107,21 +119,25 @@ export default function MoviesDesc({ item }) {
           resizeMode="stretch"
         />
       </View>
+      {login && (
+        <View style={styles.agregarFavoritos}>
+          <Text style={styles.textFavoritos} onPress={() => agregarFavorito()}>
+            Agregar a Favoritos
+          </Text>
 
-      <View style={styles.agregarFavoritos}>
-        <Text style={styles.textFavoritos} onPress={() => agregarFavorito()}>
-          Agregar a Favoritos
-        </Text>
-        <TouchableHighlight underlayColor="white" onPress={agregarFavorito}>
-          <Icon
-            type="material-community"
-            name="cards-heart"
-            size={35}
-            iconStyle={styles.iconFavoritos}
-          />
-        </TouchableHighlight>
-      </View>
-
+          <TouchableHighlight
+            underlayColor="white"
+            onPress={() => agregarFavorito()}
+          >
+            <Icon
+              type="material-community"
+              name="cards-heart"
+              size={35}
+              iconStyle={styles.iconFavoritos}
+            />
+          </TouchableHighlight>
+        </View>
+      )}
       <View style={styles.infoRecipeContainer}>
         <Text style={styles.infoRecipeName}>{item.title}</Text>
 
@@ -136,6 +152,9 @@ export default function MoviesDesc({ item }) {
           listasPrivadas={listasPrivadas}
           valueDropdown={valueDropdown}
           setValueDropdown={setValueDropdown}
+          agregarOK={agregarOK}
+          newList={newList}
+          item={item}
         />
       </Modal>
     </ScrollView>
@@ -151,7 +170,6 @@ const styles = StyleSheet.create({
     minHeight: 250,
   },
   carousel: {},
-
   image: {
     ...StyleSheet.absoluteFillObject,
     width: "100%",

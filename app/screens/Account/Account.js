@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from "react";
-import UserGuest from "./UserGuest";
 import * as firebase from "firebase";
 import UserLogued from "./UserLogued";
 import Loading from "../../components/Loading";
 import { MyContext } from "../../hoc/MyContext";
+import Login from './Login'
 
 export default function Account() {
   const [login, setLogin] = useState(null);
@@ -19,5 +19,5 @@ export default function Account() {
   }, []);
 
   if (userLogin === null) return <Loading isVisible={true} text="Cargando..." />;
-  return userLogin ? <UserLogued /> : <UserGuest />;
+  return userLogin ? <UserLogued /> : <Login />;
 }
