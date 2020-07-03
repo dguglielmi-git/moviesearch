@@ -27,6 +27,7 @@ export default function MoviesListasFavoritas(props) {
 
   const agregarMovie = () => {
     let listSelected = "";
+    setIsVisible(false);
     if (valueDropdown !== "") {
       datosDropdown.map((m) => {
         if (m.value === valueDropdown) {
@@ -34,8 +35,8 @@ export default function MoviesListasFavoritas(props) {
         }
       });
       agregarOK(listSelected);
-      setIsVisible(false);
     }
+    console.log()
   };
 
   const onChangeNuevaLista = (e) => {

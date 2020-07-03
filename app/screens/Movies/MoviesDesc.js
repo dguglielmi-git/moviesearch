@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState,useRef, useEffect, useContext } from "react";
 import * as firebase from "firebase";
 import {
   Text,
@@ -16,6 +16,7 @@ import InfoPeli from "../../components/Movies/InfoPeli";
 import CommentMovie from "../../components/Movies/Comments/CommentMovie";
 import ListComments from "../../components/Movies/Comments/ListComments";
 import MoviesListasFavoritas from "../../components/Movies/MovieListasFavoritas";
+import Toast from "react-native-easy-toast";
 
 const { width: viewportWidth } = Dimensions.get("window");
 const userData = [
@@ -77,11 +78,13 @@ export default function MoviesDesc({ item }) {
   const [valueDropdown, setValueDropdown] = useState("");
   const [listado, setListado] = useState([]);
   const clickModal = () => setIsVisible(!isVisible);
+  const [listaCreada, setListaCreada] = useState(false);
+  const toastRefOk = useRef();
 
   const agregarOK = async (idLista) => {
     console.log("ID recibido:" + idLista);
 
-    addNewMovieToList(
+    await addNewMovieToList(
       {
         id: item.id,
         imagen: item.imagen,
@@ -90,11 +93,13 @@ export default function MoviesDesc({ item }) {
       },
       idLista
     );
+    setIsVisible(false);
+    setListaCreada(true)
   };
 
   const agregarFavorito = async () => {
     setValueDropdown([]);
-    await getPrivateLists();
+     getPrivateLists();
     clickModal();
   };
 
@@ -108,6 +113,11 @@ export default function MoviesDesc({ item }) {
        */
       !user ? setLogin(false) : setLogin(true);
     });
+    if (listaCreada) {
+      setIsVisible(false);
+      //toastRefOk.current.show("Se ha agregado a la lista.", 3000);
+      setTstListUpdated(false);
+    }
   }, []);
 
   return (
@@ -145,6 +155,12 @@ export default function MoviesDesc({ item }) {
         <CommentMovie item={item} />
         <ListComments item={item} />
       </View>
+      <Toast
+          ref={toastRefOk}
+          position="top"
+          opacity={0.9}
+          style={styles.toastOk}
+        />
 
       <Modal isVisible={isVisible}>
         <MoviesListasFavoritas
@@ -255,5 +271,8 @@ const styles = StyleSheet.create({
   textFavoritos: {
     color: "#2B5FD7",
     marginLeft: 5,
+  },
+  toastOk: {
+    backgroundColor: "#C41F01",
   },
 });

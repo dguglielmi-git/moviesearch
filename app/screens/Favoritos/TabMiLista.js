@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import * as firebase from "firebase";
 import {
   View,
@@ -14,6 +14,7 @@ import Loading from "../../components/Loading";
 import { MyContext } from "../../hoc/MyContext";
 import NoLogged from "../../components/NoLogged";
 import { useNavigation } from "@react-navigation/native";
+import Toast from "react-native-easy-toast";
 
 const { width, height } = Dimensions.get("window");
 // orientation must fixed
@@ -24,11 +25,17 @@ export default function TabMiLista() {
   const navigation = useNavigation();
   const [login, setLogin] = useState(null);
   const [user, setUser] = useState([]);
+  const toastRefOk = useRef();
   const {
     setLista,
     setIdListaSel,
     listasPrivadas,
     getPrivateLists,
+    updateListaPriv,
+    setUpdateListaPriv,
+    deleteList,
+    tstListUpdated,
+    setTstListUpdated,
   } = useContext(MyContext);
 
   useEffect(() => {
@@ -37,9 +44,13 @@ export default function TabMiLista() {
       // o puede devolver un objeto con los datos del usuario e indica que el usuario esta logueado
       !user ? setLogin(false) : setLogin(true);
       user && setUser(user);
+      if (tstListUpdated) {
+        toastRefOk.current.show("Se ha eliminado la lista seleccionada.", 3000);
+        setTstListUpdated(false);
+      }
     });
     getPrivateLists();
-  }, []);
+  }, [tstListUpdated]);
 
   const findById = (id) => {
     let result = [];
@@ -63,41 +74,6 @@ export default function TabMiLista() {
 
   const agregarList = () => {};
 
-  /**
-   * Renderizado de los boxes de Listas Privadas a visualizar
-   */
-  const renderLista = ({ item }) => (
-    <View style={{ flexDirection: "row" }}>
-      <TouchableHighlight
-        underlayColor="rgba(204,204,204,0.02)"
-        onPress={() => onPressLista(item.id)}
-        style={{ borderRadius: 25 }}
-      >
-        <View style={styles.container}>
-          <Image
-            source={require("../../../assets/cine.png")}
-            style={styles.imgCine}
-          />
-          <View>
-            <View>
-              <Text style={styles.tituloLista}>{item.title}</Text>
-            </View>
-            <Text style={styles.descripcionLista}>{item.desc}</Text>
-          </View>
-        </View>
-      </TouchableHighlight>
-      <TouchableHighlight
-        underlayColor="rgba(204,204,204,0.02)"
-        style={{ borderRadius: 25 }}
-      >
-        <Image
-          source={require("../../../assets/eliminar.png")}
-          style={styles.quitarIcon}
-        />
-      </TouchableHighlight>
-    </View>
-  );
-
   if (login === null) return <Loading isVisible={true} text="Cargando..." />;
 
   return !login ? (
@@ -119,39 +95,56 @@ export default function TabMiLista() {
           />
         </TouchableHighlight>
       </View>
+      <Toast
+        ref={toastRefOk}
+        position="top"
+        opacity={0.9}
+        style={styles.toastOk}
+      />
 
-      {listasPrivadas ? (
-        <FlatList
-          vertical
-          showsVerticalScrollIndicator={false}
-          numColumns={1}
-          data={listasPrivadas}
-          renderItem={(datos) => (
-            <ListaPrivada datos={datos} setIdListaSel={setIdListaSel} />
-          )}
-          keyExtractor={(item, index) => index.toString()}
-        />
-      ) : (
+      {updateListaPriv ? (
         <View>
           <ActivityIndicator size="large" />
         </View>
+      ) : (
+        listasPrivadas && (
+          <FlatList
+            vertical
+            showsVerticalScrollIndicator={false}
+            numColumns={1}
+            data={listasPrivadas}
+            renderItem={(datos) => (
+              <ListaPrivada
+                datos={datos}
+                setIdListaSel={setIdListaSel}
+                setUpdateListaPriv={setUpdateListaPriv}
+                deleteList={deleteList}
+              />
+            )}
+            keyExtractor={(item, index) => index.toString()}
+          />
+        )
       )}
     </View>
   );
 }
 
 function ListaPrivada(props) {
-  const { datos, setIdListaSel } = props;
+  const { datos, setIdListaSel, setUpdateListaPriv, deleteList } = props;
   const { desc, id, items, privado, title, usuario } = datos.item;
   const navigation = useNavigation();
-  
+
   const onPressLista = (id) => {
-    console.log(id)
+    console.log(id);
     setIdListaSel(id);
     navigation.navigate("showList");
   };
 
-  
+  const eliminarLista = (id) => {
+    setUpdateListaPriv(true);
+    deleteList(id);
+  };
+
   return (
     <View style={{ flexDirection: "row" }}>
       <TouchableHighlight
@@ -173,6 +166,7 @@ function ListaPrivada(props) {
         </View>
       </TouchableHighlight>
       <TouchableHighlight
+        onPress={() => eliminarLista(id)}
         underlayColor="rgba(204,204,204,0.02)"
         style={{ borderRadius: 25 }}
       >
@@ -248,5 +242,8 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     elevation: 10,
     flexDirection: "row",
+  },
+  toastOk: {
+    backgroundColor: "#C41F01",
   },
 });

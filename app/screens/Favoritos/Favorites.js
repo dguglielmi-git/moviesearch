@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useEffect} from "react";
 import TabMiLista from "./TabMiLista";
 import TabGeneros from "./TabGeneros";
 import TabListaOtros from "./TabListaOtros";
@@ -6,6 +6,10 @@ import { Text, StyleSheet } from "react-native";
 import { Container, Tab, Tabs, TabHeading, Icon } from "native-base";
 
 export default function Favorites() {
+ useEffect(() => {
+  console.log('tabs')
+ })
+
   return (
     <Container>
       <Tabs>

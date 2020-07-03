@@ -19,6 +19,9 @@ const MyContextProvider = (props) => {
   const [item, setItem] = useState([]);
   const [lista, setLista] = useState([]);
   const [idListaSel, setIdListaSel] = useState("");
+  const [updateListaPriv, setUpdateListaPriv] = useState(false);
+  const [tstListUpdated, setTstListUpdated] = useState(false);
+
   //---- nuevas modificaciones
   const [listasPrivadas, setListasPrivadas] = useState([]);
   const [listasPublicas, setListasPublicas] = useState([]);
@@ -708,19 +711,6 @@ const MyContextProvider = (props) => {
         console.log("Error al insertar comentario.");
       });
   };
-  //
-  const createLists = () => {
-    listapublica2.map((m) => {
-      db.collection("listas")
-        .add(m)
-        .then(() => {
-          console.log("Ok");
-        })
-        .catch(() => {
-          console.log("Error al insertar comentario.");
-        });
-    });
-  };
 
   // Inserta comentario en la base
   const addComentario = (
@@ -811,6 +801,22 @@ const MyContextProvider = (props) => {
     listaprivada.map((m) => console.log(m.title));
   };
 
+  const deleteList = (id) => {
+    db.collection("listas")
+      .doc(id)
+      .delete()
+      .then(() => {
+        console.log("Lista borrada");
+        getPrivateLists().then(() => {
+          console.log("Listas privadas actualizadas");
+          setUpdateListaPriv(false);
+          setTstListUpdated(true);
+        });
+      })
+      .catch(() => {
+        console.log("Error al borrar la lista");
+      });
+  };
   //Login check
   const checkLogin = () => {
     firebase.auth().onAuthStateChanged((user) => {
@@ -899,6 +905,11 @@ const MyContextProvider = (props) => {
         listasPublicas,
         setListasPublicas,
         getPublicLists,
+        updateListaPriv,
+        setUpdateListaPriv,
+        deleteList,
+        tstListUpdated,
+        setTstListUpdated,
       }}
     >
       {props.children}

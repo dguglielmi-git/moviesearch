@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { MyContext } from "../hoc/MyContext";
 import MoviesDesc from "../screens/Movies/MoviesDesc";
 import Favorites from "../screens/Favoritos/Favorites";
@@ -9,7 +9,11 @@ import ListaPeliculasPublicas from "../screens/Favoritos/ListaPeliculasPublicas"
 const Stack = createStackNavigator();
 
 export default function FavoritesStack() {
-  const { item } = useContext(MyContext);
+  const { item, getPrivateLists } = useContext(MyContext);
+
+  useEffect(() => {
+    console.log('Favoritos click')
+  }, []);
 
   return (
     <Stack.Navigator>

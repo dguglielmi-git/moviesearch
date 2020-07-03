@@ -23,10 +23,11 @@ export default function ListaPeliculas() {
     listasPrivadas,
     deleteMovieList,
     getPrivateLists,
+    updateListaPriv,
+    setUpdateListaPriv,
   } = useContext(MyContext);
   const [listado, setListado] = useState([]);
   const [descLista, setDescLista] = useState("");
-  const [updateListaPeliculas, setUpdateListaPeliculas] = useState(false);
 
   const toggleDomain = () => {
     setDomainList(!domainList);
@@ -36,7 +37,7 @@ export default function ListaPeliculas() {
 
   const labelDomain = () => (domainList ? "Lista Pública" : "Lista Privada");
 
-  const cargarPeliculas = async() => {
+  const cargarPeliculas = async () => {
     await getPrivateLists();
     setListado([]);
     listasPrivadas.forEach((l) => {
@@ -44,19 +45,17 @@ export default function ListaPeliculas() {
         setListado(l.items);
         setDescLista(l.desc);
         setDomainList(!l.privado);
-        console.log('l.privado: ' +l.privado)
       }
     });
   };
 
   useEffect(() => {
     cargarPeliculas();
-    if (updateListaPeliculas) {
-      console.log("Se ejecuta la actualizacion");
+    if (updateListaPriv) {
       cargarPeliculas();
-      setUpdateListaPeliculas(false);
+      setUpdateListaPriv(false);
     }
-  }, [updateListaPeliculas]);
+  }, [updateListaPriv]);
 
   return (
     <Container>
@@ -88,7 +87,6 @@ export default function ListaPeliculas() {
               setItem={setItem}
               deleteMovieList={deleteMovieList}
               listado={listado}
-              setUpdateListaPeliculas={setUpdateListaPeliculas}
             />
           )}
           keyExtractor={(item, index) => index.toString()}
@@ -104,7 +102,6 @@ function ListadoPeliculas(props) {
     setItem,
     deleteMovieList,
     listado,
-    setUpdateListaPeliculas,
   } = props;
   const { id, imagen, overview, title, items } = datos.item;
   const navigation = useNavigation();
@@ -130,7 +127,6 @@ function ListadoPeliculas(props) {
     });
     deleteMovieList(newArray);
     console.log("Eliminada la pelicula");
-    setUpdateListaPeliculas(true);
   };
 
   useEffect(() => {
@@ -145,7 +141,9 @@ function ListadoPeliculas(props) {
             <Image style={styles.imagenPelicula} source={{ uri: imagen }} />
           </View>
           <View style={styles.titleContainer}>
-            <Text note numberOfLines={2} style={styles.titleMovie}>{title}</Text>
+            <Text note numberOfLines={2} style={styles.titleMovie}>
+              {title}
+            </Text>
 
             <Text note numberOfLines={3} style={styles.overview}>
               {overview}
@@ -201,7 +199,7 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     fontSize: 16,
     fontWeight: "bold",
-    width:260,
+    width: 260,
   },
   imagenPelicula: {
     height: 80,
