@@ -11,10 +11,6 @@ const Stack = createStackNavigator();
 export default function FavoritesStack() {
   const { item, getPrivateLists } = useContext(MyContext);
 
-  useEffect(() => {
-    console.log('Favoritos click')
-  }, []);
-
   return (
     <Stack.Navigator>
       <Stack.Screen

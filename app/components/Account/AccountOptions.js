@@ -48,7 +48,6 @@ export default function AccountOptions(props) {
         setRenderComponent(
           <View></View>
         );
-        console.log('Lista favoritos click')
         navigation.navigate("favorites",{userInfo});
         break;
       default:

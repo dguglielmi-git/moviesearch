@@ -7,7 +7,6 @@ import { firebaseApp } from "../utils/firebase";
 export const MyContext = createContext();
 
 const db = firebase.firestore(firebaseApp);
-
 const MyContextProvider = (props) => {
   // Navigation
   const [userLogin, setUserLogin] = useState(false);
